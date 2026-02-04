@@ -1,0 +1,13 @@
+{
+  "filename": "pokemon-diamond.zip",
+  "originalPath": "games/pokemondiamond/pokemon-diamond.zip",
+  "size": 27924117,
+  "hash": "d2479ffeca15a02430bb50006bbe2f969ecfb92ea922da54ca52d157c78adb8d",
+  "chunks": [
+    "pokemon-diamond.zip.part000",
+    "pokemon-diamond.zip.part001"
+  ],
+  "numChunks": 2,
+  "chunkSize": 25165824,
+  "createdAt": "2026-02-04T06:26:26.819Z"
+}

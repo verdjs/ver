@@ -1,0 +1,13 @@
+{
+  "filename": "Sonic Rush (Europe) (En,Ja,Fr,De,Es,It).zip",
+  "originalPath": "games/sonicrush/Sonic Rush (Europe) (En,Ja,Fr,De,Es,It).zip",
+  "size": 44995779,
+  "hash": "2ec7a4903118f15261fe0c500c77bd901e753a51434a709e3c01f8a04cb02cb9",
+  "chunks": [
+    "Sonic Rush (Europe) (En,Ja,Fr,De,Es,It).zip.part000",
+    "Sonic Rush (Europe) (En,Ja,Fr,De,Es,It).zip.part001"
+  ],
+  "numChunks": 2,
+  "chunkSize": 25165824,
+  "createdAt": "2026-02-04T06:26:24.908Z"
+}

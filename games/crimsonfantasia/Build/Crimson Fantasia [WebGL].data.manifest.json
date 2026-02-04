@@ -1,0 +1,13 @@
+{
+  "filename": "Crimson Fantasia [WebGL].data",
+  "originalPath": "games/crimsonfantasia/Build/Crimson Fantasia [WebGL].data",
+  "size": 48175888,
+  "hash": "a9031b802b7de5c9cf82e25594e928f6b37719335e9bd1ce2a165e9f122a1268",
+  "chunks": [
+    "Crimson Fantasia [WebGL].data.part000",
+    "Crimson Fantasia [WebGL].data.part001"
+  ],
+  "numChunks": 2,
+  "chunkSize": 25165824,
+  "createdAt": "2026-02-04T06:26:24.789Z"
+}

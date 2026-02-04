@@ -1,0 +1,14 @@
+{
+  "filename": "Legend of Zelda, The - Spirit Tracks (USA) (En,Fr,Es).zip",
+  "originalPath": "games/spirittracks/Legend of Zelda, The - Spirit Tracks (USA) (En,Fr,Es).zip",
+  "size": 69761826,
+  "hash": "c2ff7e359546ce3f0870ed34cdabef5c96ede426842a52e3d4ccb88bcb3dab5c",
+  "chunks": [
+    "Legend of Zelda, The - Spirit Tracks (USA) (En,Fr,Es).zip.part000",
+    "Legend of Zelda, The - Spirit Tracks (USA) (En,Fr,Es).zip.part001",
+    "Legend of Zelda, The - Spirit Tracks (USA) (En,Fr,Es).zip.part002"
+  ],
+  "numChunks": 3,
+  "chunkSize": 25165824,
+  "createdAt": "2026-02-04T06:26:22.345Z"
+}

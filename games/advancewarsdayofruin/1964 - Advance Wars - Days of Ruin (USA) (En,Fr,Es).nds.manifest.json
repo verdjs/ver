@@ -1,0 +1,14 @@
+{
+  "filename": "1964 - Advance Wars - Days of Ruin (USA) (En,Fr,Es).nds",
+  "originalPath": "games/advancewarsdayofruin/1964 - Advance Wars - Days of Ruin (USA) (En,Fr,Es).nds",
+  "size": 67108864,
+  "hash": "aa17e43b468ef525e6e4e634eb02c66e9318a6d808c78107ff5a905900d0b2db",
+  "chunks": [
+    "1964 - Advance Wars - Days of Ruin (USA) (En,Fr,Es).nds.part000",
+    "1964 - Advance Wars - Days of Ruin (USA) (En,Fr,Es).nds.part001",
+    "1964 - Advance Wars - Days of Ruin (USA) (En,Fr,Es).nds.part002"
+  ],
+  "numChunks": 3,
+  "chunkSize": 25165824,
+  "createdAt": "2026-02-04T06:26:22.579Z"
+}

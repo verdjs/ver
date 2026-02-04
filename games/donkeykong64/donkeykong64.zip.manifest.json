@@ -1,0 +1,13 @@
+{
+  "filename": "donkeykong64.zip",
+  "originalPath": "games/donkeykong64/donkeykong64.zip",
+  "size": 27870280,
+  "hash": "aa4903252e18b32fa15111632c89975cbc3800044dc1afc7ac51578baff38391",
+  "chunks": [
+    "donkeykong64.zip.part000",
+    "donkeykong64.zip.part001"
+  ],
+  "numChunks": 2,
+  "chunkSize": 25165824,
+  "createdAt": "2026-02-04T06:26:26.877Z"
+}

@@ -1,0 +1,13 @@
+{
+  "filename": "Jet Force Gemini (USA).n64",
+  "originalPath": "games/jetforcegemini/Jet Force Gemini (USA).n64",
+  "size": 33554432,
+  "hash": "774614a2cfe5d3efbe444adf92f236b977098b6caf40cd6140a94cbdd1b93890",
+  "chunks": [
+    "Jet Force Gemini (USA).n64.part000",
+    "Jet Force Gemini (USA).n64.part001"
+  ],
+  "numChunks": 2,
+  "chunkSize": 25165824,
+  "createdAt": "2026-02-04T06:26:26.099Z"
+}

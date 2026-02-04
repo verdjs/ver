@@ -1,0 +1,13 @@
+{
+  "filename": "10MinutesTillDawnWebGL.data.unityweb",
+  "originalPath": "games/10minutestilldawn/Build/10MinutesTillDawnWebGL.data.unityweb",
+  "size": 27343110,
+  "hash": "bfa18bfdc2c283b79ddfbb8e08305b476617fe6e01648865063c937ca855afbd",
+  "chunks": [
+    "10MinutesTillDawnWebGL.data.unityweb.part000",
+    "10MinutesTillDawnWebGL.data.unityweb.part001"
+  ],
+  "numChunks": 2,
+  "chunkSize": 25165824,
+  "createdAt": "2026-02-04T06:26:27.246Z"
+}

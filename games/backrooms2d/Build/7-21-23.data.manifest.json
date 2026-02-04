@@ -1,0 +1,15 @@
+{
+  "filename": "7-21-23.data",
+  "originalPath": "games/backrooms2d/Build/7-21-23.data",
+  "size": 81269745,
+  "hash": "09f244eb0c6600addc2b83a0039ef7523b02d632f7f729c5b85c0d3f24fc3446",
+  "chunks": [
+    "7-21-23.data.part000",
+    "7-21-23.data.part001",
+    "7-21-23.data.part002",
+    "7-21-23.data.part003"
+  ],
+  "numChunks": 4,
+  "chunkSize": 25165824,
+  "createdAt": "2026-02-04T06:26:21.775Z"
+}

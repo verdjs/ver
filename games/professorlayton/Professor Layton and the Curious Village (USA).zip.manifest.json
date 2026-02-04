@@ -1,0 +1,14 @@
+{
+  "filename": "Professor Layton and the Curious Village (USA).zip",
+  "originalPath": "games/professorlayton/Professor Layton and the Curious Village (USA).zip",
+  "size": 53389522,
+  "hash": "f8036fb23f80b65b9fd70fd0b638291e547c1730dcc7ea89b64c084c0b4af4fd",
+  "chunks": [
+    "Professor Layton and the Curious Village (USA).zip.part000",
+    "Professor Layton and the Curious Village (USA).zip.part001",
+    "Professor Layton and the Curious Village (USA).zip.part002"
+  ],
+  "numChunks": 3,
+  "chunkSize": 25165824,
+  "createdAt": "2026-02-04T06:26:23.959Z"
+}

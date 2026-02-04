@@ -1,0 +1,14 @@
+{
+  "filename": "pokemon-soulsilver.zip",
+  "originalPath": "games/pokemonsoulsilver/pokemon-soulsilver.zip",
+  "size": 60760073,
+  "hash": "9ba4ae451f032272caf1007c9012a0ffcdbcf6f5b4617717fb73436d3bc51d20",
+  "chunks": [
+    "pokemon-soulsilver.zip.part000",
+    "pokemon-soulsilver.zip.part001",
+    "pokemon-soulsilver.zip.part002"
+  ],
+  "numChunks": 3,
+  "chunkSize": 25165824,
+  "createdAt": "2026-02-04T06:26:23.664Z"
+}

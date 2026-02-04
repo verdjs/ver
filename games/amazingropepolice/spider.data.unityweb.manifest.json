@@ -1,0 +1,14 @@
+{
+  "filename": "spider.data.unityweb",
+  "originalPath": "games/amazingropepolice/spider.data.unityweb",
+  "size": 65798158,
+  "hash": "968f6cc1882755ed2336a5369403193a5e664211fc9801239a32ec991719ce86",
+  "chunks": [
+    "spider.data.unityweb.part000",
+    "spider.data.unityweb.part001",
+    "spider.data.unityweb.part002"
+  ],
+  "numChunks": 3,
+  "chunkSize": 25165824,
+  "createdAt": "2026-02-04T06:26:23.516Z"
+}

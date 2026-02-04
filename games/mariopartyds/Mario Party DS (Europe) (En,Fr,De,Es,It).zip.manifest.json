@@ -1,0 +1,13 @@
+{
+  "filename": "Mario Party DS (Europe) (En,Fr,De,Es,It).zip",
+  "originalPath": "games/mariopartyds/Mario Party DS (Europe) (En,Fr,De,Es,It).zip",
+  "size": 28194853,
+  "hash": "f6bccff9f9090e8e8ef4224ebf577a9c89825552a7faa768e692f1d8357edbc0",
+  "chunks": [
+    "Mario Party DS (Europe) (En,Fr,De,Es,It).zip.part000",
+    "Mario Party DS (Europe) (En,Fr,De,Es,It).zip.part001"
+  ],
+  "numChunks": 2,
+  "chunkSize": 25165824,
+  "createdAt": "2026-02-04T06:26:26.702Z"
+}

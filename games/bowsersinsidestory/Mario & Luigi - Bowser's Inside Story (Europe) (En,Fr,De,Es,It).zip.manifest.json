@@ -1,0 +1,14 @@
+{
+  "filename": "Mario & Luigi - Bowser's Inside Story (Europe) (En,Fr,De,Es,It).zip",
+  "originalPath": "games/bowsersinsidestory/Mario & Luigi - Bowser's Inside Story (Europe) (En,Fr,De,Es,It).zip",
+  "size": 65898530,
+  "hash": "9f83a985019d54b2e01553d450ce829d700ed0c226b5ee017295e6803c39bd22",
+  "chunks": [
+    "Mario & Luigi - Bowser's Inside Story (Europe) (En,Fr,De,Es,It).zip.part000",
+    "Mario & Luigi - Bowser's Inside Story (Europe) (En,Fr,De,Es,It).zip.part001",
+    "Mario & Luigi - Bowser's Inside Story (Europe) (En,Fr,De,Es,It).zip.part002"
+  ],
+  "numChunks": 3,
+  "chunkSize": 25165824,
+  "createdAt": "2026-02-04T06:26:23.290Z"
+}

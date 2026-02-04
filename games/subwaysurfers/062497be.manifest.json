@@ -1,0 +1,13 @@
+{
+  "filename": "062497be",
+  "originalPath": "games/subwaysurfers/062497be",
+  "size": 34353812,
+  "hash": "26e254a1cfa1bbb59d28cd2f8ab22c6fa2a13f291b98a735301ab596eff41b4d",
+  "chunks": [
+    "062497be.part000",
+    "062497be.part001"
+  ],
+  "numChunks": 2,
+  "chunkSize": 25165824,
+  "createdAt": "2026-02-04T06:26:25.778Z"
+}
