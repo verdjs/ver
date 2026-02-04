@@ -1,5 +1,5 @@
 function applyStoredTheme() {
-    const storedTheme = localStorage.getItem('selectedTheme');
+    const storedTheme = localStorage.getItem('selectedTheme') || 'retro'; // Default to retro
     if (storedTheme) {
         document.documentElement.className = `theme-${storedTheme}`;
 
