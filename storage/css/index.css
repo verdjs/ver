@@ -29,6 +29,24 @@ body::-webkit-scrollbar {
     animation: mainHeaderAnimation 1s ease-in-out forwards;
     background-image: var(--background-image);
     background-size: cover;
+    position: relative;
+}
+
+.content-side::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(10, 22, 40, 0.5);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.content-side > * {
+    position: relative;
+    z-index: 1;
 }
   
 h1 {
@@ -252,9 +270,12 @@ a {
     animation-duration: 10s;
     animation-timing-function: linear;
     animation-iteration-count: infinite;
-    color: #ffffff;
-    font-size: 1em;
     opacity: 0.8;
+    width: 8px;
+    height: 8px;
+    background: #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 0 5px #ffffff;
 }
 
 @keyframes snowfall {
@@ -294,4 +315,13 @@ body {
 
 a, button, .button, select, input {
     cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="12" fill="none" stroke="white" stroke-width="2"/><circle cx="16" cy="16" r="6" fill="white"/></svg>') 16 16, pointer;
+}
+
+/* Hide v10 update popup */
+#updPopup {
+    display: none !important;
+}
+
+#blackout {
+    display: none !important;
 }
