@@ -1,9 +1,9 @@
 ---
 name: "❓ question"
-about: have a question about seraph?
+about: have a question about verdis?
 title: "[Question] "
 labels: question
-assignees: a456pur
+assignees: verdjs
 
 ---
 

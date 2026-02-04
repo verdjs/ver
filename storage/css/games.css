@@ -1,8 +1,8 @@
 @import url('/storage/css/themes.css');
 
 :root {
-    --background-image: url('/images/backgrounds/seraph/gamebg.jpg');
-    --border-color1: #a19b9b;
+    --background-image: url('/images/backgrounds/verdis/gamebg.jpg');
+    --border-color1: #4a9eff;
 }
 :root.theme-azurite {
     --background-image: url('/images/backgrounds/azure/gamesbg.jpg');
@@ -92,22 +92,22 @@ h1 {
     font-size: 16px;
     margin: 8px;
 
-    width: calc(50% - 10px); 
-    max-width: 480px;
-
-    width: 400px;
-    max-height: 100px;
+    width: 200px;
+    height: 200px;
     box-sizing: border-box;
 
-    padding-left: 10px;
-    padding-right: 10px;
+    padding: 10px;
 
     background-repeat: no-repeat;
     background-size: cover;
+    background-position: center;
 
     border: 3.2px solid var(--border-color2);
     border-radius: 16px;
 
+    display: flex;
+    align-items: center;
+    justify-content: center;
     
     position: relative;
 }
@@ -313,4 +313,58 @@ a {
 p {
     padding-left: 20%;
     padding-right: 20%;
+}
+/* Snow particles effect */
+.snowflake {
+    position: fixed;
+    top: -10px;
+    z-index: 9999;
+    user-select: none;
+    cursor: default;
+    animation-name: snowfall;
+    animation-duration: 10s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    color: #ffffff;
+    font-size: 1em;
+    opacity: 0.8;
+}
+
+@keyframes snowfall {
+    0% {
+        transform: translateY(0vh) translateX(0);
+    }
+    100% {
+        transform: translateY(100vh) translateX(100px);
+    }
+}
+
+.snowflake:nth-child(1) { left: 1%; animation-duration: 6s; }
+.snowflake:nth-child(2) { left: 10%; animation-duration: 12s; animation-delay: 1s; }
+.snowflake:nth-child(3) { left: 20%; animation-duration: 9s; animation-delay: 2s; }
+.snowflake:nth-child(4) { left: 30%; animation-duration: 11s; animation-delay: 0.5s; }
+.snowflake:nth-child(5) { left: 40%; animation-duration: 13s; }
+.snowflake:nth-child(6) { left: 50%; animation-duration: 7s; animation-delay: 3s; }
+.snowflake:nth-child(7) { left: 60%; animation-duration: 10s; animation-delay: 1.5s; }
+.snowflake:nth-child(8) { left: 70%; animation-duration: 8s; animation-delay: 2.5s; }
+.snowflake:nth-child(9) { left: 80%; animation-duration: 14s; }
+.snowflake:nth-child(10) { left: 90%; animation-duration: 11s; animation-delay: 0.8s; }
+.snowflake:nth-child(11) { left: 5%; animation-duration: 9s; animation-delay: 2s; }
+.snowflake:nth-child(12) { left: 15%; animation-duration: 12s; }
+.snowflake:nth-child(13) { left: 25%; animation-duration: 10s; animation-delay: 1.2s; }
+.snowflake:nth-child(14) { left: 35%; animation-duration: 8s; animation-delay: 0.3s; }
+.snowflake:nth-child(15) { left: 45%; animation-duration: 13s; animation-delay: 1.8s; }
+.snowflake:nth-child(16) { left: 55%; animation-duration: 7s; }
+.snowflake:nth-child(17) { left: 65%; animation-duration: 11s; animation-delay: 2.2s; }
+.snowflake:nth-child(18) { left: 75%; animation-duration: 9s; animation-delay: 0.7s; }
+.snowflake:nth-child(19) { left: 85%; animation-duration: 12s; animation-delay: 1.3s; }
+.snowflake:nth-child(20) { left: 95%; animation-duration: 10s; animation-delay: 0.1s; }
+
+/* Hollow Knight style custom cursor */
+body {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="12" fill="none" stroke="white" stroke-width="2"/><circle cx="16" cy="16" r="4" fill="white"/></svg>') 16 16, auto;
+}
+
+a, button, .button, select, input {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="12" fill="none" stroke="white" stroke-width="2"/><circle cx="16" cy="16" r="6" fill="white"/></svg>') 16 16, pointer;
 }

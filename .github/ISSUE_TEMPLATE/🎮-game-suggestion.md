@@ -1,9 +1,9 @@
 ---
 name: "\U0001F3AE game suggestion"
-about: suggest a game to be added to seraph
+about: suggest a game to be added to verdis
 title: "[Game Suggestion] "
 labels: game addition
-assignees: a456pur
+assignees: verdjs
 
 ---
 

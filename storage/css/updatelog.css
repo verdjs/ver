@@ -1,7 +1,7 @@
 @import url('/storage/css/themes.css');
 
 :root {
-    --background-image: url('/images/backgrounds/seraph/updatelogbg.jpg');
+    --background-image: url('/images/backgrounds/verdis/updatelogbg.jpg');
     --hover-color: #a19b9b;
 }
 :root.theme-azurite {

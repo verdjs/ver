@@ -1,9 +1,9 @@
 ---
 name: "\U0001F4A1 website suggestion"
-about: suggest something to be added to seraph
+about: suggest something to be added to verdis
 title: "[Suggestion] "
 labels: suggestion
-assignees: a456pur
+assignees: verdjs
 
 ---
 
