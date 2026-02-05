@@ -296,6 +296,76 @@
         });
         </script>    
 
+      <!-- Educational Disclaimer Modal -->
+      <div id="disclaimerModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); z-index: 10000; backdrop-filter: blur(10px);">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(20, 20, 20, 0.95); border: 3px solid #00ff88; border-radius: 20px; padding: 40px; max-width: 600px; width: 90%; text-align: center; box-shadow: 0 0 30px rgba(0, 255, 136, 0.5);">
+          <h2 style="color: #00ff88; font-size: 2rem; margin-bottom: 20px; text-shadow: 0 0 10px rgba(0, 255, 136, 0.7);">⚠️ Important Notice</h2>
+          <p style="color: #ffffff; font-size: 1.2rem; line-height: 1.6; margin-bottom: 25px;">
+            Please do not play these games at school. Your education is important and should be your primary focus during school hours. 
+            These games are intended for entertainment during your free time only.
+          </p>
+          <p style="color: #aaaaaa; font-size: 0.9rem; margin-bottom: 30px;">
+            By continuing, you acknowledge that you will use this site responsibly.
+          </p>
+          <button id="disclaimerOkBtn" disabled style="background: #333333; color: #666666; padding: 15px 40px; font-size: 1.1rem; border: 2px solid #555555; border-radius: 12px; cursor: not-allowed; font-family: inherit; transition: all 0.3s;">
+            OK (<span id="disclaimerCountdown">5</span>)
+          </button>
+        </div>
+      </div>
+
+      <script>
+        // Disclaimer functionality
+        (function() {
+          const disclaimerShown = localStorage.getItem('disclaimerAccepted');
+          
+          if (!disclaimerShown) {
+            const modal = document.getElementById('disclaimerModal');
+            const okBtn = document.getElementById('disclaimerOkBtn');
+            const countdown = document.getElementById('disclaimerCountdown');
+            
+            modal.style.display = 'block';
+            
+            let seconds = 5;
+            const timer = setInterval(() => {
+              seconds--;
+              countdown.textContent = seconds;
+              
+              if (seconds <= 0) {
+                clearInterval(timer);
+                okBtn.disabled = false;
+                okBtn.style.background = 'linear-gradient(135deg, #00ff88, #00cc6a)';
+                okBtn.style.color = '#000000';
+                okBtn.style.border = '2px solid #00ff88';
+                okBtn.style.cursor = 'pointer';
+                okBtn.style.boxShadow = '0 0 20px rgba(0, 255, 136, 0.5)';
+                okBtn.textContent = 'OK';
+                
+                okBtn.onmouseover = function() {
+                  this.style.boxShadow = '0 0 30px rgba(0, 255, 136, 0.8)';
+                  this.style.transform = 'scale(1.05)';
+                };
+                okBtn.onmouseout = function() {
+                  this.style.boxShadow = '0 0 20px rgba(0, 255, 136, 0.5)';
+                  this.style.transform = 'scale(1)';
+                };
+              }
+            }, 1000);
+            
+            okBtn.onclick = function() {
+              if (!this.disabled) {
+                localStorage.setItem('disclaimerAccepted', 'true');
+                modal.style.opacity = '1';
+                modal.style.transition = 'opacity 0.5s';
+                modal.style.opacity = '0';
+                setTimeout(() => {
+                  modal.style.display = 'none';
+                }, 500);
+              }
+            };
+          }
+        })();
+      </script>
+
       <script src="storage/js/cloak.js"></script>
       <script src="storage/js/theme.js"></script>
       <script src="storage/js/cookie.js"></script>
