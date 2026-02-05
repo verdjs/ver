@@ -1,0 +1,19 @@
+<svg width="400" height="400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fc2651;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e91e47;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="400" height="400" fill="url(#bg-gradient)"/>
+  
+  <!-- Text -->
+  <text x="200" y="180" font-family="'SF Pro Display', -apple-system, sans-serif" font-size="80" font-weight="800" fill="white" text-anchor="middle">gn</text>
+  <text x="200" y="260" font-family="'SF Pro Display', -apple-system, sans-serif" font-size="80" font-weight="800" fill="white" text-anchor="middle">math</text>
+  
+  <!-- Subtitle -->
+  <text x="200" y="310" font-family="sans-serif" font-size="20" fill="rgba(255,255,255,0.9)" text-anchor="middle">Games Collection</text>
+</svg>
