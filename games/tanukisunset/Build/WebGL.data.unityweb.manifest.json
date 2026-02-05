@@ -1,0 +1,13 @@
+{
+  "filename": "WebGL.data.unityweb",
+  "originalPath": "games/tanukisunset/Build/WebGL.data.unityweb",
+  "size": 49167945,
+  "hash": "0e05e29f480ac11291d4bfc4c2da499ba55cb2f4d94a2a13d5732b038b7211a0",
+  "chunks": [
+    "WebGL.data.unityweb.part000",
+    "WebGL.data.unityweb.part001"
+  ],
+  "numChunks": 2,
+  "chunkSize": 25165824,
+  "createdAt": "2026-02-04T06:26:24.662Z"
+}

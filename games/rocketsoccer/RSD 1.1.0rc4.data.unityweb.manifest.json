@@ -1,0 +1,13 @@
+{
+  "filename": "RSD 1.1.0rc4.data.unityweb",
+  "originalPath": "games/rocketsoccer/RSD 1.1.0rc4.data.unityweb",
+  "size": 29723236,
+  "hash": "e6280a9c8dbc9c9c2ed3cb243736ba88bdcc08d3498887dbf0bb75058a98f983",
+  "chunks": [
+    "RSD 1.1.0rc4.data.unityweb.part000",
+    "RSD 1.1.0rc4.data.unityweb.part001"
+  ],
+  "numChunks": 2,
+  "chunkSize": 25165824,
+  "createdAt": "2026-02-04T06:26:26.501Z"
+}

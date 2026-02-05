@@ -1,0 +1,13 @@
+{
+  "filename": "Banjo-Tooie (USA).n64",
+  "originalPath": "games/banjotooie/Banjo-Tooie (USA).n64",
+  "size": 33554432,
+  "hash": "bef9321a24f5b16783b38c4be7901eab1ab6c60016e4ed921556f013955a139c",
+  "chunks": [
+    "Banjo-Tooie (USA).n64.part000",
+    "Banjo-Tooie (USA).n64.part001"
+  ],
+  "numChunks": 2,
+  "chunkSize": 25165824,
+  "createdAt": "2026-02-04T06:26:26.005Z"
+}

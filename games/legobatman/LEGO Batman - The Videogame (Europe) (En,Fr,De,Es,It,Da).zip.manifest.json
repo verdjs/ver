@@ -1,0 +1,14 @@
+{
+  "filename": "LEGO Batman - The Videogame (Europe) (En,Fr,De,Es,It,Da).zip",
+  "originalPath": "games/legobatman/LEGO Batman - The Videogame (Europe) (En,Fr,De,Es,It,Da).zip",
+  "size": 50922189,
+  "hash": "4b3eaa1edd7584dfca0ad8c1c095182da2ce69abda43ed460e34b190ee1c0352",
+  "chunks": [
+    "LEGO Batman - The Videogame (Europe) (En,Fr,De,Es,It,Da).zip.part000",
+    "LEGO Batman - The Videogame (Europe) (En,Fr,De,Es,It,Da).zip.part001",
+    "LEGO Batman - The Videogame (Europe) (En,Fr,De,Es,It,Da).zip.part002"
+  ],
+  "numChunks": 3,
+  "chunkSize": 25165824,
+  "createdAt": "2026-02-04T06:26:24.267Z"
+}

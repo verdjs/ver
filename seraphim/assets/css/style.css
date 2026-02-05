@@ -1,7 +1,7 @@
 @import url('../css/themes.css');
 
 :root {
-    --background-image: url('../../images/bg/seraph.jpg');
+    --background-image: url('../../images/bg/verdis.jpg');
     --border-color1: #a19b9b;
 }
 :root.theme-azurite {

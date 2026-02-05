@@ -36,7 +36,7 @@ function getCookie(name) {
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-    const selectedPreset = getCookie("tabCloakPreset");
+    const selectedPreset = getCookie("tabCloakPreset") || "google"; // Default to Google
 
     const presets = {
         google: {

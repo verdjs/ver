@@ -1,0 +1,14 @@
+{
+  "filename": "Sims 3, The (Europe) (En,Fr,De,Es,It,Nl) (NDSi Enhanced).zip",
+  "originalPath": "games/thesims3/Sims 3, The (Europe) (En,Fr,De,Es,It,Nl) (NDSi Enhanced).zip",
+  "size": 70097443,
+  "hash": "254bf46e573ff44ea0dae5913d357c215377a17dd0e51a55c4358a124bd586c2",
+  "chunks": [
+    "Sims 3, The (Europe) (En,Fr,De,Es,It,Nl) (NDSi Enhanced).zip.part000",
+    "Sims 3, The (Europe) (En,Fr,De,Es,It,Nl) (NDSi Enhanced).zip.part001",
+    "Sims 3, The (Europe) (En,Fr,De,Es,It,Nl) (NDSi Enhanced).zip.part002"
+  ],
+  "numChunks": 3,
+  "chunkSize": 25165824,
+  "createdAt": "2026-02-04T06:26:22.165Z"
+}

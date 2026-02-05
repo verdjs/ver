@@ -1,0 +1,13 @@
+{
+  "filename": "5.swf",
+  "originalPath": "games/fleeingthecomplex/5.swf",
+  "size": 34525817,
+  "hash": "e27fd0d7128b71dd25c197866973ace27a81de2fd65bf7a7dadc87743b2853c1",
+  "chunks": [
+    "5.swf.part000",
+    "5.swf.part001"
+  ],
+  "numChunks": 2,
+  "chunkSize": 25165824,
+  "createdAt": "2026-02-04T06:26:25.680Z"
+}

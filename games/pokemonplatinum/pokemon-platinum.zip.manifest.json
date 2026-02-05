@@ -1,0 +1,14 @@
+{
+  "filename": "pokemon-platinum.zip",
+  "originalPath": "games/pokemonplatinum/pokemon-platinum.zip",
+  "size": 50777907,
+  "hash": "95ca960b6ed650227ed166b7da7fff3ff9d5f7ee036ac68eb4c2c9e0db212801",
+  "chunks": [
+    "pokemon-platinum.zip.part000",
+    "pokemon-platinum.zip.part001",
+    "pokemon-platinum.zip.part002"
+  ],
+  "numChunks": 3,
+  "chunkSize": 25165824,
+  "createdAt": "2026-02-04T06:26:24.402Z"
+}

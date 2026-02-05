@@ -1,0 +1,14 @@
+{
+  "filename": "Sims 2, The (USA) (En,Fr,De,Es,It).zip",
+  "originalPath": "games/thesims2/Sims 2, The (USA) (En,Fr,De,Es,It).zip",
+  "size": 57655085,
+  "hash": "6e21cacabf524dbb3c3f3e86bbf9693c94648c73a23e33b320025a719c3efe72",
+  "chunks": [
+    "Sims 2, The (USA) (En,Fr,De,Es,It).zip.part000",
+    "Sims 2, The (USA) (En,Fr,De,Es,It).zip.part001",
+    "Sims 2, The (USA) (En,Fr,De,Es,It).zip.part002"
+  ],
+  "numChunks": 3,
+  "chunkSize": 25165824,
+  "createdAt": "2026-02-04T06:26:23.812Z"
+}

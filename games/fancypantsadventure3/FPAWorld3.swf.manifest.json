@@ -1,0 +1,13 @@
+{
+  "filename": "FPAWorld3.swf",
+  "originalPath": "games/fancypantsadventure3/FPAWorld3.swf",
+  "size": 35359245,
+  "hash": "779ee9a7fc22c1dabfa1379450df83985781c3d04b4e29f81919c0a75e629eba",
+  "chunks": [
+    "FPAWorld3.swf.part000",
+    "FPAWorld3.swf.part001"
+  ],
+  "numChunks": 2,
+  "chunkSize": 25165824,
+  "createdAt": "2026-02-04T06:26:25.477Z"
+}

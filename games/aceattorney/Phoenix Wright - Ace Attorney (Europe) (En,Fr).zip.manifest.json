@@ -1,0 +1,13 @@
+{
+  "filename": "Phoenix Wright - Ace Attorney (Europe) (En,Fr).zip",
+  "originalPath": "games/aceattorney/Phoenix Wright - Ace Attorney (Europe) (En,Fr).zip",
+  "size": 39948392,
+  "hash": "7e6ea74e79b77fef39b420eafc0a3486304b759e1e14a28d14ed86d1b755c947",
+  "chunks": [
+    "Phoenix Wright - Ace Attorney (Europe) (En,Fr).zip.part000",
+    "Phoenix Wright - Ace Attorney (Europe) (En,Fr).zip.part001"
+  ],
+  "numChunks": 2,
+  "chunkSize": 25165824,
+  "createdAt": "2026-02-04T06:26:25.170Z"
+}

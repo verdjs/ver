@@ -1,0 +1,14 @@
+{
+  "filename": "0121 - Castlevania - Dawn of Sorrow (USA).nds",
+  "originalPath": "games/castlevaniadawnofsorrow/0121 - Castlevania - Dawn of Sorrow (USA).nds",
+  "size": 67108864,
+  "hash": "3ddc8b0eac841b6005ff4c38a184b517fa8225ac905aad951b0572850358d8b0",
+  "chunks": [
+    "0121 - Castlevania - Dawn of Sorrow (USA).nds.part000",
+    "0121 - Castlevania - Dawn of Sorrow (USA).nds.part001",
+    "0121 - Castlevania - Dawn of Sorrow (USA).nds.part002"
+  ],
+  "numChunks": 3,
+  "chunkSize": 25165824,
+  "createdAt": "2026-02-04T06:26:22.753Z"
+}

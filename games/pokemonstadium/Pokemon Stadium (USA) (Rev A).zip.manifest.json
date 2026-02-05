@@ -1,0 +1,13 @@
+{
+  "filename": "Pokemon Stadium (USA) (Rev A).zip",
+  "originalPath": "games/pokemonstadium/Pokemon Stadium (USA) (Rev A).zip",
+  "size": 27823938,
+  "hash": "1df8a1cf355304fbe65d304a423a1e89c2ba19b3061698831b65c80df116f3ed",
+  "chunks": [
+    "Pokemon Stadium (USA) (Rev A).zip.part000",
+    "Pokemon Stadium (USA) (Rev A).zip.part001"
+  ],
+  "numChunks": 2,
+  "chunkSize": 25165824,
+  "createdAt": "2026-02-04T06:26:26.994Z"
+}

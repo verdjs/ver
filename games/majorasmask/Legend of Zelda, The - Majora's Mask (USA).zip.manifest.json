@@ -1,0 +1,13 @@
+{
+  "filename": "Legend of Zelda, The - Majora's Mask (USA).zip",
+  "originalPath": "games/majorasmask/Legend of Zelda, The - Majora's Mask (USA).zip",
+  "size": 27831073,
+  "hash": "8e60647b18d74f9e74935b928b5a7b28aca6416976c2a3dc21af7749978b4c97",
+  "chunks": [
+    "Legend of Zelda, The - Majora's Mask (USA).zip.part000",
+    "Legend of Zelda, The - Majora's Mask (USA).zip.part001"
+  ],
+  "numChunks": 2,
+  "chunkSize": 25165824,
+  "createdAt": "2026-02-04T06:26:26.936Z"
+}

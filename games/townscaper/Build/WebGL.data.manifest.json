@@ -1,0 +1,13 @@
+{
+  "filename": "WebGL.data",
+  "originalPath": "games/townscaper/Build/WebGL.data",
+  "size": 32386485,
+  "hash": "37a47d08e04a15a3b73b28d364834620f4f1c72ee400202c6c339e73e27eca77",
+  "chunks": [
+    "WebGL.data.part000",
+    "WebGL.data.part001"
+  ],
+  "numChunks": 2,
+  "chunkSize": 25165824,
+  "createdAt": "2026-02-04T06:26:26.374Z"
+}

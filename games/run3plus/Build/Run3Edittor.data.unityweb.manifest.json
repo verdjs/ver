@@ -1,0 +1,13 @@
+{
+  "filename": "Run3Edittor.data.unityweb",
+  "originalPath": "games/run3plus/Build/Run3Edittor.data.unityweb",
+  "size": 35218624,
+  "hash": "002b44d00e87babf7fc4b2b9d2982ae1260a11ef2136541992206ae7bbcd3524",
+  "chunks": [
+    "Run3Edittor.data.unityweb.part000",
+    "Run3Edittor.data.unityweb.part001"
+  ],
+  "numChunks": 2,
+  "chunkSize": 25165824,
+  "createdAt": "2026-02-04T06:26:25.578Z"
+}

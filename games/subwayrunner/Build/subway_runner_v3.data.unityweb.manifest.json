@@ -1,0 +1,13 @@
+{
+  "filename": "subway_runner_v3.data.unityweb",
+  "originalPath": "games/subwayrunner/Build/subway_runner_v3.data.unityweb",
+  "size": 37684939,
+  "hash": "052126d4959da561d1c7dcca6bd8de4d687734cf4a5c6238c1fa57b5c49398e7",
+  "chunks": [
+    "subway_runner_v3.data.unityweb.part000",
+    "subway_runner_v3.data.unityweb.part001"
+  ],
+  "numChunks": 2,
+  "chunkSize": 25165824,
+  "createdAt": "2026-02-04T06:26:25.272Z"
+}

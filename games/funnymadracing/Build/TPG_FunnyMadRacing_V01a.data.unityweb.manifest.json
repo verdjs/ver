@@ -1,0 +1,13 @@
+{
+  "filename": "TPG_FunnyMadRacing_V01a.data.unityweb",
+  "originalPath": "games/funnymadracing/Build/TPG_FunnyMadRacing_V01a.data.unityweb",
+  "size": 37629002,
+  "hash": "2d66b7574b42f6040118b75ba1078572d33ad23308ead449d0652db4706444e7",
+  "chunks": [
+    "TPG_FunnyMadRacing_V01a.data.unityweb.part000",
+    "TPG_FunnyMadRacing_V01a.data.unityweb.part001"
+  ],
+  "numChunks": 2,
+  "chunkSize": 25165824,
+  "createdAt": "2026-02-04T06:26:25.377Z"
+}

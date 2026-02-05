@@ -1,0 +1,14 @@
+{
+  "filename": "Mario & Luigi - Partners in Time (USA) (Rev 1).nds",
+  "originalPath": "games/marioandluigipartnersintime/Mario & Luigi - Partners in Time (USA) (Rev 1).nds",
+  "size": 67108864,
+  "hash": "164c82b37531f561b9a5e5457edcb20417cbc2e04dd4f8234c2d16db4bfcb23a",
+  "chunks": [
+    "Mario & Luigi - Partners in Time (USA) (Rev 1).nds.part000",
+    "Mario & Luigi - Partners in Time (USA) (Rev 1).nds.part001",
+    "Mario & Luigi - Partners in Time (USA) (Rev 1).nds.part002"
+  ],
+  "numChunks": 3,
+  "chunkSize": 25165824,
+  "createdAt": "2026-02-04T06:26:23.112Z"
+}

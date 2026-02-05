@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chunk Reassembler Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .description {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 4px;
+            border-left: 4px solid #4CAF50;
+        }
+        .test-section h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .progress {
+            width: 100%;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            background: #4CAF50;
+            width: 0%;
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        .log {
+            background: #000;
+            color: #0f0;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 10px 0;
+        }
+        .log-entry {
+            margin: 2px 0;
+        }
+        .error {
+            color: #f44336;
+        }
+        .success {
+            color: #4CAF50;
+        }
+        .info {
+            color: #2196F3;
+        }
+        .file-info {
+            background: #fff;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+        }
+        .file-info strong {
+            display: inline-block;
+            width: 150px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Chunk Reassembler Test</h1>
+        <p class="description">
+            This page tests the chunk reassembly system for large files that have been split
+            to comply with Cloudflare Pages' 25MB limit.
+        </p>
+
+        <div class="test-section">
+            <h3>Test 1: Reassemble Small File (Ocarina of Time)</h3>
+            <p>Tests reassembly of a 2-chunk file (25.75 MB total)</p>
+            <button id="test1-btn" onclick="testReassembly1()">Start Test 1</button>
+            <button onclick="clearCache()">Clear Cache</button>
+            <div class="progress">
+                <div id="progress1" class="progress-bar">0%</div>
+            </div>
+            <div id="info1" class="file-info" style="display: none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>Test 2: Reassemble Larger File (Backrooms 2D)</h3>
+            <p>Tests reassembly of a 4-chunk file (77.5 MB total)</p>
+            <button id="test2-btn" onclick="testReassembly2()">Start Test 2</button>
+            <div class="progress">
+                <div id="progress2" class="progress-bar">0%</div>
+            </div>
+            <div id="info2" class="file-info" style="display: none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>Cache Test</h3>
+            <p>Tests IndexedDB caching functionality</p>
+            <button onclick="testCache()">Test Cache</button>
+            <button onclick="clearCache()">Clear Cache</button>
+            <div id="cache-info"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>Console Log</h3>
+            <div id="log" class="log">
+                <div class="log-entry info">Ready to test. Click a button to begin.</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/scripts/chunk-reassembler.js"></script>
+    <script>
+        const reassembler = new ChunkReassembler();
+        let test1Blob = null;
+        let test2Blob = null;
+
+        function log(message, type = 'info') {
+            const logEl = document.getElementById('log');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logEl.appendChild(entry);
+            logEl.scrollTop = logEl.scrollHeight;
+            console.log(message);
+        }
+
+        function updateProgress(id, percent) {
+            const progressBar = document.getElementById(id);
+            progressBar.style.width = percent + '%';
+            progressBar.textContent = percent + '%';
+        }
+
+        function displayFileInfo(infoId, manifest, blob, timeTaken) {
+            const infoEl = document.getElementById(infoId);
+            infoEl.style.display = 'block';
+            infoEl.innerHTML = `
+                <strong>Filename:</strong> ${manifest.filename}<br>
+                <strong>Size:</strong> ${(manifest.size / 1024 / 1024).toFixed(2)} MB<br>
+                <strong>Chunks:</strong> ${manifest.numChunks}<br>
+                <strong>Hash:</strong> ${manifest.hash.substring(0, 16)}...<br>
+                <strong>Reassembled Size:</strong> ${(blob.size / 1024 / 1024).toFixed(2)} MB<br>
+                <strong>Time Taken:</strong> ${timeTaken.toFixed(2)}s<br>
+                <strong>Status:</strong> <span class="success">✓ Success</span>
+            `;
+        }
+
+        async function testReassembly1() {
+            const btn = document.getElementById('test1-btn');
+            btn.disabled = true;
+            updateProgress('progress1', 0);
+            
+            try {
+                log('Test 1: Starting reassembly of ocarinaoftime.zip...', 'info');
+                const startTime = performance.now();
+                
+                // First fetch the manifest to show details
+                const manifestResponse = await fetch('games/ocarinaoftime/ocarinaoftime.zip.manifest.json');
+                const manifest = await manifestResponse.json();
+                log(`Manifest loaded: ${manifest.filename} (${manifest.numChunks} chunks)`, 'info');
+                
+                const blob = await reassembler.reassembleFile(
+                    'games/ocarinaoftime/ocarinaoftime.zip.manifest.json',
+                    (progress) => updateProgress('progress1', progress),
+                    true
+                );
+                
+                const timeTaken = (performance.now() - startTime) / 1000;
+                test1Blob = blob;
+                
+                log(`Test 1: Success! Reassembled ${(blob.size / 1024 / 1024).toFixed(2)} MB in ${timeTaken.toFixed(2)}s`, 'success');
+                displayFileInfo('info1', manifest, blob, timeTaken);
+                
+            } catch (error) {
+                log(`Test 1: Error - ${error.message}`, 'error');
+                updateProgress('progress1', 0);
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        async function testReassembly2() {
+            const btn = document.getElementById('test2-btn');
+            btn.disabled = true;
+            updateProgress('progress2', 0);
+            
+            try {
+                log('Test 2: Starting reassembly of 7-21-23.data...', 'info');
+                const startTime = performance.now();
+                
+                // First fetch the manifest to show details
+                const manifestResponse = await fetch('games/backrooms2d/Build/7-21-23.data.manifest.json');
+                const manifest = await manifestResponse.json();
+                log(`Manifest loaded: ${manifest.filename} (${manifest.numChunks} chunks)`, 'info');
+                
+                const blob = await reassembler.reassembleFile(
+                    'games/backrooms2d/Build/7-21-23.data.manifest.json',
+                    (progress) => updateProgress('progress2', progress),
+                    true
+                );
+                
+                const timeTaken = (performance.now() - startTime) / 1000;
+                test2Blob = blob;
+                
+                log(`Test 2: Success! Reassembled ${(blob.size / 1024 / 1024).toFixed(2)} MB in ${timeTaken.toFixed(2)}s`, 'success');
+                displayFileInfo('info2', manifest, blob, timeTaken);
+                
+            } catch (error) {
+                log(`Test 2: Error - ${error.message}`, 'error');
+                updateProgress('progress2', 0);
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        async function testCache() {
+            try {
+                log('Testing cache functionality...', 'info');
+                
+                // Check if we have any cached files
+                await reassembler.initDB();
+                log('IndexedDB initialized successfully', 'success');
+                
+                // Try to get a cached file
+                const cached = await reassembler.getCachedFile('ocarinaoftime.zip');
+                if (cached) {
+                    log(`Found cached file: ocarinaoftime.zip (${(cached.blob.size / 1024 / 1024).toFixed(2)} MB)`, 'success');
+                    const cacheInfo = document.getElementById('cache-info');
+                    cacheInfo.innerHTML = `
+                        <div class="file-info">
+                            <strong>Cached File:</strong> ${cached.filename}<br>
+                            <strong>Size:</strong> ${(cached.blob.size / 1024 / 1024).toFixed(2)} MB<br>
+                            <strong>Hash:</strong> ${cached.hash.substring(0, 16)}...<br>
+                            <strong>Cached At:</strong> ${new Date(cached.timestamp).toLocaleString()}
+                        </div>
+                    `;
+                } else {
+                    log('No cached files found. Run Test 1 first to cache a file.', 'info');
+                    document.getElementById('cache-info').innerHTML = '<p>No cached files. Run a test first.</p>';
+                }
+                
+            } catch (error) {
+                log(`Cache test error: ${error.message}`, 'error');
+            }
+        }
+
+        async function clearCache() {
+            try {
+                log('Clearing cache...', 'info');
+                await reassembler.clearCache();
+                log('Cache cleared successfully', 'success');
+                document.getElementById('cache-info').innerHTML = '<p>Cache cleared.</p>';
+            } catch (error) {
+                log(`Error clearing cache: ${error.message}`, 'error');
+            }
+        }
+    </script>
+</body>
+</html>

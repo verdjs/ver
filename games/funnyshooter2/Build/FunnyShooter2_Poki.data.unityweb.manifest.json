@@ -1,0 +1,13 @@
+{
+  "filename": "FunnyShooter2_Poki.data.unityweb",
+  "originalPath": "games/funnyshooter2/Build/FunnyShooter2_Poki.data.unityweb",
+  "size": 42274254,
+  "hash": "92b3c97e031dc643cdd878f901c387ec30e6ae499afeaad5a6c110ce662f4429",
+  "chunks": [
+    "FunnyShooter2_Poki.data.unityweb.part000",
+    "FunnyShooter2_Poki.data.unityweb.part001"
+  ],
+  "numChunks": 2,
+  "chunkSize": 25165824,
+  "createdAt": "2026-02-04T06:26:25.022Z"
+}

@@ -1,0 +1,14 @@
+{
+  "filename": "3092 - Castlevania - Order of Ecclesia (Europe) (En,Fr,De,Es,It).nds",
+  "originalPath": "games/castlevaniaorderofecclesia/3092 - Castlevania - Order of Ecclesia (Europe) (En,Fr,De,Es,It).nds",
+  "size": 67108864,
+  "hash": "49a7590e8d20a78d5743de56333bc512a205a8ba5cd7a8c35d1780708c74b79f",
+  "chunks": [
+    "3092 - Castlevania - Order of Ecclesia (Europe) (En,Fr,De,Es,It).nds.part000",
+    "3092 - Castlevania - Order of Ecclesia (Europe) (En,Fr,De,Es,It).nds.part001",
+    "3092 - Castlevania - Order of Ecclesia (Europe) (En,Fr,De,Es,It).nds.part002"
+  ],
+  "numChunks": 3,
+  "chunkSize": 25165824,
+  "createdAt": "2026-02-04T06:26:22.933Z"
+}

@@ -1,0 +1,13 @@
+{
+  "filename": "toyCommercial.mp4",
+  "originalPath": "games/fnf/assets/videos/videos/toyCommercial.mp4",
+  "size": 33648514,
+  "hash": "f7eb739a2f3c094c023d66df4d90dc9f71425a30b9aa6ae18ae99be9b909548e",
+  "chunks": [
+    "toyCommercial.mp4.part000",
+    "toyCommercial.mp4.part001"
+  ],
+  "numChunks": 2,
+  "chunkSize": 25165824,
+  "createdAt": "2026-02-04T06:26:25.881Z"
+}

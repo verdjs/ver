@@ -50,12 +50,12 @@
 :root {
     --background-image: url('/images/backgrounds/seraph/homebg.jpg');
     --font-family: 'Ubuntu', sans-serif;
-    --text-color: #fff;
-    --background-color: black;
-    --border-color1: #000000;
-    --border-color2: #ffffff;
-    --hover-color: #1a1818;
-    --text-glow: #000000
+    --text-color: #e0f0ff;
+    --background-color: #0a1628;
+    --border-color1: #4a9eff;
+    --border-color2: #1e4d8b;
+    --hover-color: #1a3a5c;
+    --text-glow: #2d6cc4
 }
 
 :root.theme-azurite {

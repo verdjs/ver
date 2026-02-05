@@ -1,0 +1,15 @@
+{
+  "filename": "phhh.data",
+  "originalPath": "games/pakohighway/Build/phhh.data",
+  "size": 77083700,
+  "hash": "31d6d0500dcb12198433759f82a959067a0adcf5c50d8602093dc711e8c9175b",
+  "chunks": [
+    "phhh.data.part000",
+    "phhh.data.part001",
+    "phhh.data.part002",
+    "phhh.data.part003"
+  ],
+  "numChunks": 4,
+  "chunkSize": 25165824,
+  "createdAt": "2026-02-04T06:26:21.975Z"
+}

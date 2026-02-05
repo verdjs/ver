@@ -1,0 +1,13 @@
+{
+  "filename": "ocarinaoftime.zip",
+  "originalPath": "games/ocarinaoftime/ocarinaoftime.zip",
+  "size": 26999427,
+  "hash": "116b01d4cd4dc940ca5a66f7ddfd085a9cc66c49f133632413a651f6f4405673",
+  "chunks": [
+    "ocarinaoftime.zip.part000",
+    "ocarinaoftime.zip.part001"
+  ],
+  "numChunks": 2,
+  "chunkSize": 25165824,
+  "createdAt": "2026-02-04T06:26:27.300Z"
+}
