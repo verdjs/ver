@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/images/ico.ico" type="image/x-icon">
+    <title>Retro Weather | Verdis</title>
+    <style>
+        @import url('/storage/css/themes.css');
+
+        :root {
+            --background-image: url('/images/backgrounds/retro/appsbg.jpg');
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background: var(--background-color);
+            background-image: var(--background-image);
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            color: var(--text-color);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .weather-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 3px 3px 6px var(--text-glow);
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--text-color);
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        .back-link:hover {
+            opacity: 1;
+        }
+
+        .search-section {
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid var(--border-color2);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            background-color: rgba(0, 0, 0, 0.4);
+            color: var(--text-color);
+            padding: 12px 16px;
+            border: 2px solid var(--border-color2);
+            border-radius: 12px;
+            font-family: var(--font-family);
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--border-color1);
+            box-shadow: 0 0 15px var(--text-glow);
+        }
+
+        button {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            padding: 12px 24px;
+            border: 2px solid var(--border-color2);
+            border-radius: 12px;
+            font-family: var(--font-family);
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background-color: var(--hover-color);
+            border-color: var(--border-color1);
+            box-shadow: 0 0 15px var(--text-glow);
+        }
+
+        .weather-display {
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid var(--border-color2);
+            border-radius: 16px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+
+        .location-name {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px var(--text-glow);
+        }
+
+        .temperature {
+            font-size: 4rem;
+            font-weight: bold;
+            margin: 20px 0;
+            text-shadow: 3px 3px 6px var(--text-glow);
+        }
+
+        .weather-description {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+
+        .weather-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .detail-item {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color2);
+        }
+
+        .detail-label {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        /* Particle effects */
+        .particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .snow {
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: fall linear infinite;
+        }
+
+        .rain {
+            width: 2px;
+            height: 20px;
+            background: linear-gradient(to bottom, transparent, rgba(100, 150, 255, 0.8));
+            animation: fall linear infinite;
+        }
+
+        .sun-ray {
+            width: 4px;
+            height: 100px;
+            background: linear-gradient(to bottom, rgba(255, 220, 100, 0.6), transparent);
+            animation: sunRayFall linear infinite;
+        }
+
+        .cloud-particle {
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle, rgba(200, 200, 200, 0.6), transparent);
+            border-radius: 50%;
+            animation: cloudFloat linear infinite;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+            }
+        }
+
+        @keyframes sunRayFall {
+            to {
+                transform: translateY(100vh) rotate(20deg);
+            }
+        }
+
+        @keyframes cloudFloat {
+            to {
+                transform: translateX(100vw);
+            }
+        }
+
+        .loading {
+            text-align: center;
+            font-size: 1.2rem;
+            opacity: 0.7;
+        }
+
+        .error {
+            background: rgba(255, 50, 50, 0.2);
+            border-color: #ff4444;
+            color: #ffaaaa;
+        }
+    </style>
+</head>
+<body>
+    <div class="weather-container">
+        <h1>🌤️ Retro Weather</h1>
+        <a href="/index.html" class="back-link">← Back to Portfolio</a>
+
+        <div class="search-section">
+            <div class="search-box">
+                <input type="text" id="locationInput" placeholder="Enter city name or coordinates..." value="Sydney">
+                <button onclick="getWeather()">Get Weather</button>
+            </div>
+        </div>
+
+        <div id="weatherDisplay" class="weather-display">
+            <div class="loading">Enter a location to see the weather...</div>
+        </div>
+    </div>
+
+    <div id="particleContainer"></div>
+
+    <script src="/storage/js/theme.js"></script>
+    <script>
+        let particles = [];
+
+        async function getWeather() {
+            const location = document.getElementById('locationInput').value.trim();
+            const display = document.getElementById('weatherDisplay');
+            
+            if (!location) {
+                display.innerHTML = '<div class="error">Please enter a location</div>';
+                return;
+            }
+
+            display.innerHTML = '<div class="loading">Loading weather data...</div>';
+            clearParticles();
+
+            try {
+                // Get coordinates from location name using geocoding
+                const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(location)}&count=1&language=en&format=json`;
+                const geoResponse = await fetch(geoUrl);
+                const geoData = await geoResponse.json();
+
+                if (!geoData.results || geoData.results.length === 0) {
+                    throw new Error('Location not found');
+                }
+
+                const { latitude, longitude, name, country } = geoData.results[0];
+
+                // Get weather data
+                const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,rain,snowfall,weather_code,cloud_cover,wind_speed_10m&timezone=auto`;
+                const weatherResponse = await fetch(weatherUrl);
+                const weatherData = await weatherResponse.json();
+
+                displayWeather(weatherData, name, country);
+            } catch (error) {
+                console.error('Weather fetch error:', error);
+                display.innerHTML = `<div class="error">Failed to load weather: ${error.message}</div>`;
+            }
+        }
+
+        function displayWeather(data, locationName, country) {
+            const current = data.current;
+            const weatherCode = current.weather_code;
+            const weatherDesc = getWeatherDescription(weatherCode);
+            
+            const html = `
+                <div class="location-name">${locationName}, ${country}</div>
+                <div class="temperature">${Math.round(current.temperature_2m)}°C</div>
+                <div class="weather-description">${weatherDesc}</div>
+                <div class="weather-details">
+                    <div class="detail-item">
+                        <div class="detail-label">Feels Like</div>
+                        <div class="detail-value">${Math.round(current.apparent_temperature)}°C</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Humidity</div>
+                        <div class="detail-value">${current.relative_humidity_2m}%</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Wind Speed</div>
+                        <div class="detail-value">${Math.round(current.wind_speed_10m)} km/h</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Cloud Cover</div>
+                        <div class="detail-value">${current.cloud_cover}%</div>
+                    </div>
+                    ${current.precipitation > 0 ? `
+                    <div class="detail-item">
+                        <div class="detail-label">Precipitation</div>
+                        <div class="detail-value">${current.precipitation} mm</div>
+                    </div>` : ''}
+                    ${current.snowfall > 0 ? `
+                    <div class="detail-item">
+                        <div class="detail-label">Snowfall</div>
+                        <div class="detail-value">${current.snowfall} cm</div>
+                    </div>` : ''}
+                </div>
+            `;
+
+            document.getElementById('weatherDisplay').innerHTML = html;
+            
+            // Create particles based on weather
+            createWeatherParticles(weatherCode, current);
+        }
+
+        function getWeatherDescription(code) {
+            const descriptions = {
+                0: 'Clear sky',
+                1: 'Mainly clear',
+                2: 'Partly cloudy',
+                3: 'Overcast',
+                45: 'Foggy',
+                48: 'Depositing rime fog',
+                51: 'Light drizzle',
+                53: 'Moderate drizzle',
+                55: 'Dense drizzle',
+                61: 'Slight rain',
+                63: 'Moderate rain',
+                65: 'Heavy rain',
+                71: 'Slight snow',
+                73: 'Moderate snow',
+                75: 'Heavy snow',
+                77: 'Snow grains',
+                80: 'Slight rain showers',
+                81: 'Moderate rain showers',
+                82: 'Violent rain showers',
+                85: 'Slight snow showers',
+                86: 'Heavy snow showers',
+                95: 'Thunderstorm',
+                96: 'Thunderstorm with slight hail',
+                99: 'Thunderstorm with heavy hail'
+            };
+            return descriptions[code] || 'Unknown';
+        }
+
+        function createWeatherParticles(weatherCode, current) {
+            clearParticles();
+            const container = document.getElementById('particleContainer');
+            
+            // Snow
+            if (weatherCode >= 71 && weatherCode <= 77 || weatherCode >= 85 && weatherCode <= 86 || current.snowfall > 0) {
+                for (let i = 0; i < 50; i++) {
+                    createParticle(container, 'snow');
+                }
+            }
+            // Rain
+            else if (weatherCode >= 51 && weatherCode <= 67 || weatherCode >= 80 && weatherCode <= 82 || current.rain > 0) {
+                for (let i = 0; i < 100; i++) {
+                    createParticle(container, 'rain');
+                }
+            }
+            // Clear/Sunny
+            else if (weatherCode === 0 || weatherCode === 1) {
+                for (let i = 0; i < 20; i++) {
+                    createParticle(container, 'sun-ray');
+                }
+            }
+            // Cloudy
+            else if (weatherCode >= 2 && weatherCode <= 3 || current.cloud_cover > 50) {
+                for (let i = 0; i < 15; i++) {
+                    createParticle(container, 'cloud-particle');
+                }
+            }
+        }
+
+        function createParticle(container, type) {
+            const particle = document.createElement('div');
+            particle.className = `particle ${type}`;
+            
+            const startX = Math.random() * window.innerWidth;
+            const startY = -50;
+            const duration = 3 + Math.random() * 4;
+            const delay = Math.random() * 2;
+            
+            particle.style.left = startX + 'px';
+            particle.style.top = startY + 'px';
+            particle.style.animationDuration = duration + 's';
+            particle.style.animationDelay = delay + 's';
+            
+            if (type === 'cloud-particle') {
+                particle.style.top = (Math.random() * 30) + '%';
+                particle.style.left = '-50px';
+            }
+            
+            container.appendChild(particle);
+            particles.push(particle);
+            
+            // Remove particle after animation
+            setTimeout(() => {
+                if (particle.parentNode) {
+                    particle.parentNode.removeChild(particle);
+                }
+            }, (duration + delay) * 1000);
+        }
+
+        function clearParticles() {
+            particles.forEach(p => {
+                if (p.parentNode) {
+                    p.parentNode.removeChild(p);
+                }
+            });
+            particles = [];
+        }
+
+        // Load default weather on page load
+        window.addEventListener('load', () => {
+            getWeather();
+        });
+    </script>
+</body>
+</html>
