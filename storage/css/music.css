@@ -1,0 +1,352 @@
+@import url('/storage/css/themes.css');
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-family);
+    display: flex;
+    background-color: var(--background-color);
+    animation: fadein 2s forwards;
+    
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-color1) var(--background-color);
+}
+
+body::-webkit-scrollbar {
+    width: 10px;
+}
+
+body::-webkit-scrollbar-track {
+    background: var(--background-color);
+}
+
+body::-webkit-scrollbar-thumb {
+    background: var(--border-color1);
+    border-radius: 5px;
+}
+
+.music-container {
+    width: 100%;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    animation: fadein 1s ease-in-out forwards;
+    background-image: var(--background-image);
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    position: relative;
+    min-height: 100vh;
+}
+
+.music-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(10, 22, 40, 0.5);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.music-container > * {
+    position: relative;
+    z-index: 1;
+}
+
+h1 {
+    font-size: 48px;
+    font-family: var(--font-family);
+    text-shadow: 0 0 10px var(--text-color),
+                 0 0 10px var(--text-glow),
+                 0 0 30px var(--text-glow),
+                 0 0 40px var(--text-color),
+                 0 0 50px var(--text-glow),
+                 0 0 60px var(--text-color),
+                 0 0 70px var(--text-glow),
+                 0 0 80px #000000;
+    margin-bottom: 10px;
+}
+
+h3 {
+    font-size: 24px;
+    text-shadow: 5px 5px 5px var(--text-glow);
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+p {
+    font-size: 18px;
+    text-align: center;
+    text-shadow: 3px 3px 3px var(--text-glow);
+}
+
+.linkp a {
+    font-size: 17px;
+    text-decoration: underline;
+    color: var(--text-color);
+    text-shadow: 5px 5px 5px var(--text-glow);
+    transition: 0.15s ease-in-out;
+}
+
+.linkp a:hover {
+    color: var(--border-color1);
+}
+
+.player-box {
+    background-color: rgba(10, 22, 40, 0.8);
+    border: 3px solid var(--border-color2);
+    border-radius: 16px;
+    padding: 30px;
+    max-width: 900px;
+    width: 100%;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5),
+                0 0 40px var(--text-glow);
+    margin-top: 20px;
+}
+
+.search-section {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+input[type="text"] {
+    flex: 1;
+    min-width: 200px;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    padding: 10px;
+    border: 2px solid var(--border-color1);
+    border-radius: 16px;
+    font-size: 18px;
+    font-family: var(--font-family);
+}
+
+input[type="text"]::placeholder {
+    color: var(--text-color);
+    opacity: 0.6;
+}
+
+button {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    padding: 10px 20px;
+    border: 2px solid var(--border-color2);
+    border-radius: 16px;
+    font-family: var(--font-family);
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+}
+
+button:hover:not(:disabled) {
+    background-color: var(--hover-color);
+    border-color: var(--border-color1);
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.search-results {
+    min-height: 100px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+}
+
+.result-item {
+    padding: 10px;
+    margin: 10px 0;
+}
+
+.player-section {
+    margin: 20px 0;
+}
+
+.current-track {
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    border: 2px solid var(--border-color2);
+}
+
+.player-frame {
+    margin: 20px 0;
+    min-height: 315px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.player-frame iframe {
+    border-radius: 12px;
+}
+
+.controls {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.controls button {
+    flex: 1;
+    min-width: 120px;
+    max-width: 200px;
+}
+
+.playlist-section {
+    margin-top: 30px;
+}
+
+.playlist {
+    max-height: 400px;
+    overflow-y: auto;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    padding: 10px;
+}
+
+.empty-playlist {
+    opacity: 0.6;
+    font-style: italic;
+}
+
+.playlist-item {
+    background-color: var(--background-color);
+    border: 2px solid var(--border-color2);
+    border-radius: 12px;
+    padding: 12px;
+    margin: 8px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+}
+
+.playlist-item:hover {
+    background-color: var(--hover-color);
+    border-color: var(--border-color1);
+    transform: translateX(5px);
+}
+
+.playlist-item.active {
+    background-color: var(--hover-color);
+    border-color: var(--border-color1);
+    box-shadow: 0 0 10px var(--text-glow);
+}
+
+.playlist-item button {
+    background-color: transparent;
+    border: none;
+    color: var(--text-color);
+    font-size: 24px;
+    padding: 0 10px;
+    min-width: auto;
+}
+
+.playlist-item button:hover {
+    color: #ff4444;
+    transform: scale(1.2);
+}
+
+/* Snow particles effect */
+.snowflake {
+    position: fixed;
+    top: -10px;
+    z-index: 9999;
+    user-select: none;
+    cursor: default;
+    animation-name: snowfall;
+    animation-duration: 10s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    opacity: 0.8;
+    width: 8px;
+    height: 8px;
+    background: #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 0 5px #ffffff;
+}
+
+@keyframes snowfall {
+    0% {
+        transform: translateY(0vh) translateX(0);
+    }
+    100% {
+        transform: translateY(100vh) translateX(100px);
+    }
+}
+
+.snowflake:nth-child(1) { left: 1%; animation-duration: 6s; }
+.snowflake:nth-child(2) { left: 10%; animation-duration: 12s; animation-delay: 1s; }
+.snowflake:nth-child(3) { left: 20%; animation-duration: 9s; animation-delay: 2s; }
+.snowflake:nth-child(4) { left: 30%; animation-duration: 11s; animation-delay: 0.5s; }
+.snowflake:nth-child(5) { left: 40%; animation-duration: 13s; }
+.snowflake:nth-child(6) { left: 50%; animation-duration: 7s; animation-delay: 3s; }
+.snowflake:nth-child(7) { left: 60%; animation-duration: 10s; animation-delay: 1.5s; }
+.snowflake:nth-child(8) { left: 70%; animation-duration: 8s; animation-delay: 2.5s; }
+.snowflake:nth-child(9) { left: 80%; animation-duration: 14s; }
+.snowflake:nth-child(10) { left: 90%; animation-duration: 11s; animation-delay: 0.8s; }
+.snowflake:nth-child(11) { left: 5%; animation-duration: 9s; animation-delay: 2s; }
+.snowflake:nth-child(12) { left: 15%; animation-duration: 12s; }
+.snowflake:nth-child(13) { left: 25%; animation-duration: 10s; animation-delay: 1.2s; }
+.snowflake:nth-child(14) { left: 35%; animation-duration: 8s; animation-delay: 0.3s; }
+.snowflake:nth-child(15) { left: 45%; animation-duration: 13s; animation-delay: 1.8s; }
+.snowflake:nth-child(16) { left: 55%; animation-duration: 7s; }
+.snowflake:nth-child(17) { left: 65%; animation-duration: 11s; animation-delay: 2.2s; }
+.snowflake:nth-child(18) { left: 75%; animation-duration: 9s; animation-delay: 0.7s; }
+.snowflake:nth-child(19) { left: 85%; animation-duration: 12s; animation-delay: 1.3s; }
+.snowflake:nth-child(20) { left: 95%; animation-duration: 10s; animation-delay: 0.1s; }
+
+@keyframes fadein {
+    0% {
+        opacity: 0;
+        transform: translateY(2%) scale(0.95);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0%) scale(1);
+    }
+}
+
+/* Custom cursor */
+body {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="12" fill="none" stroke="white" stroke-width="2"/><circle cx="16" cy="16" r="4" fill="white"/></svg>') 16 16, auto;
+}
+
+a, button, .playlist-item {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="12" fill="none" stroke="white" stroke-width="2"/><circle cx="16" cy="16" r="6" fill="white"/></svg>') 16 16, pointer;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 32px;
+    }
+    
+    .player-box {
+        padding: 15px;
+    }
+    
+    .controls button {
+        min-width: 80px;
+        font-size: 14px;
+        padding: 8px 12px;
+    }
+}

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7FN7LEVWXD"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-7FN7LEVWXD');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/images/ico.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/storage/css/music.css">
+    <title>Music Player | Verdis</title>
+
+    <meta name="description" content="Music player powered by YouTube Music">
+    <meta property="og:site_name" content="verdjs">
+    <meta property="og:title" content="verdjs music player">
+    <meta property="og:type" content="website">
+</head>
+<body>
+    <!-- Snow particles -->
+    <div class="snowflake"></div>
+    <div class="snowflake"></div>
+    <div class="snowflake"></div>
+    <div class="snowflake"></div>
+    <div class="snowflake"></div>
+    <div class="snowflake"></div>
+    <div class="snowflake"></div>
+    <div class="snowflake"></div>
+    <div class="snowflake"></div>
+    <div class="snowflake"></div>
+    <div class="snowflake"></div>
+    <div class="snowflake"></div>
+    <div class="snowflake"></div>
+    <div class="snowflake"></div>
+    <div class="snowflake"></div>
+    <div class="snowflake"></div>
+    <div class="snowflake"></div>
+    <div class="snowflake"></div>
+    <div class="snowflake"></div>
+    <div class="snowflake"></div>
+
+    <div class="music-container">
+        <h1>Music Player</h1>
+        <p class="linkp"><a href="/index.html">back to portfolio</a></p>
+
+        <div class="player-box">
+            <div class="search-section">
+                <input type="text" id="searchQuery" placeholder="🔍 Search for music..." autocomplete="off">
+                <button id="searchBtn">Search</button>
+            </div>
+
+            <div id="searchResults" class="search-results"></div>
+
+            <div class="player-section">
+                <div id="currentTrack" class="current-track">
+                    <p>No track selected</p>
+                </div>
+                
+                <div id="playerFrame" class="player-frame">
+                    <!-- YouTube player will be embedded here -->
+                </div>
+
+                <div class="controls">
+                    <button id="prevBtn" disabled>⏮ Previous</button>
+                    <button id="playPauseBtn" disabled>▶ Play</button>
+                    <button id="nextBtn" disabled>⏭ Next</button>
+                </div>
+            </div>
+
+            <div class="playlist-section">
+                <h3>Playlist</h3>
+                <div id="playlist" class="playlist">
+                    <p class="empty-playlist">Your playlist is empty. Search and add songs!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let playlist = [];
+        let currentTrackIndex = -1;
+        let player = null;
+        let playerReady = false;
+
+        // Load YouTube IFrame API
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        const firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        // Initialize YouTube Player
+        function onYouTubeIframeAPIReady() {
+            playerReady = true;
+        }
+
+        // Search for music using YouTube
+        async function searchMusic(query) {
+            const searchResults = document.getElementById('searchResults');
+            searchResults.innerHTML = '<p>Searching...</p>';
+
+            try {
+                // Note: In production, you'd use YouTube Data API with proper API key
+                // For this demo, we'll create a simple interface
+                searchResults.innerHTML = `
+                    <div class="result-item">
+                        <p><strong>Note:</strong> This is a demo music player interface.</p>
+                        <p>To enable full YouTube Music integration:</p>
+                        <ol style="text-align: left; max-width: 500px; margin: 0 auto;">
+                            <li>Get a YouTube Data API key from Google Cloud Console</li>
+                            <li>Use the YouTube Data API v3 to search for videos</li>
+                            <li>Display results and allow users to add to playlist</li>
+                            <li>Use YouTube IFrame API for playback</li>
+                        </ol>
+                        <p style="margin-top: 20px;">For now, you can manually add YouTube video IDs below:</p>
+                        <input type="text" id="videoId" placeholder="Enter YouTube Video ID" style="margin-top: 10px;">
+                        <button onclick="addManualTrack()">Add to Playlist</button>
+                    </div>
+                `;
+            } catch (error) {
+                searchResults.innerHTML = '<p>Search failed. Please try again.</p>';
+            }
+        }
+
+        function addManualTrack() {
+            const videoId = document.getElementById('videoId').value.trim();
+            if (!videoId) {
+                alert('Please enter a video ID');
+                return;
+            }
+
+            const track = {
+                id: videoId,
+                title: `Track ${playlist.length + 1}`,
+                videoId: videoId
+            };
+
+            addToPlaylist(track);
+            document.getElementById('videoId').value = '';
+        }
+
+        function addToPlaylist(track) {
+            playlist.push(track);
+            updatePlaylistUI();
+            
+            if (playlist.length === 1) {
+                playTrack(0);
+            }
+        }
+
+        function updatePlaylistUI() {
+            const playlistEl = document.getElementById('playlist');
+            
+            if (playlist.length === 0) {
+                playlistEl.innerHTML = '<p class="empty-playlist">Your playlist is empty. Search and add songs!</p>';
+                return;
+            }
+
+            playlistEl.innerHTML = playlist.map((track, index) => `
+                <div class="playlist-item ${index === currentTrackIndex ? 'active' : ''}" onclick="playTrack(${index})">
+                    <span>${index + 1}. ${track.title}</span>
+                    <button onclick="event.stopPropagation(); removeTrack(${index})">×</button>
+                </div>
+            `).join('');
+        }
+
+        function playTrack(index) {
+            if (index < 0 || index >= playlist.length) return;
+
+            currentTrackIndex = index;
+            const track = playlist[index];
+
+            document.getElementById('currentTrack').innerHTML = `
+                <p><strong>Now Playing:</strong> ${track.title}</p>
+            `;
+
+            const playerFrame = document.getElementById('playerFrame');
+            playerFrame.innerHTML = `
+                <iframe 
+                    width="100%" 
+                    height="315" 
+                    src="https://www.youtube.com/embed/${track.videoId}?autoplay=1&enablejsapi=1" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            `;
+
+            updatePlaylistUI();
+            updateControls();
+        }
+
+        function updateControls() {
+            document.getElementById('prevBtn').disabled = currentTrackIndex <= 0;
+            document.getElementById('nextBtn').disabled = currentTrackIndex >= playlist.length - 1;
+            document.getElementById('playPauseBtn').disabled = playlist.length === 0;
+        }
+
+        function removeTrack(index) {
+            playlist.splice(index, 1);
+            
+            if (index === currentTrackIndex) {
+                if (playlist.length > 0) {
+                    playTrack(Math.min(index, playlist.length - 1));
+                } else {
+                    currentTrackIndex = -1;
+                    document.getElementById('currentTrack').innerHTML = '<p>No track selected</p>';
+                    document.getElementById('playerFrame').innerHTML = '';
+                }
+            } else if (index < currentTrackIndex) {
+                currentTrackIndex--;
+            }
+            
+            updatePlaylistUI();
+            updateControls();
+        }
+
+        // Event listeners
+        document.getElementById('searchBtn').addEventListener('click', () => {
+            const query = document.getElementById('searchQuery').value;
+            if (query.trim()) {
+                searchMusic(query);
+            }
+        });
+
+        document.getElementById('searchQuery').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                document.getElementById('searchBtn').click();
+            }
+        });
+
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            if (currentTrackIndex > 0) {
+                playTrack(currentTrackIndex - 1);
+            }
+        });
+
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            if (currentTrackIndex < playlist.length - 1) {
+                playTrack(currentTrackIndex + 1);
+            }
+        });
+
+        document.getElementById('playPauseBtn').addEventListener('click', () => {
+            if (currentTrackIndex >= 0) {
+                playTrack(currentTrackIndex);
+            }
+        });
+
+        // Initialize
+        updateControls();
+    </script>
+
+    <script src="/storage/js/cloak.js"></script>
+    <script src="/storage/js/theme.js"></script>
+    <script src="/storage/js/cookie.js"></script>
+</body>
+</html>

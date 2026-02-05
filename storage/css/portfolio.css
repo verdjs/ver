@@ -1,0 +1,342 @@
+@import url('/storage/css/themes.css');
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-family);
+    display: flex;
+    background-color: var(--background-color);
+    animation: mainHeaderAnimation 2s forwards;
+    
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    height: 100vh;
+    overflow: hidden;
+}
+
+body::-webkit-scrollbar {
+    width: 0;
+}
+
+.main-container {
+    width: 100%;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    animation: mainHeaderAnimation 1s ease-in-out forwards;
+    background-image: var(--background-image);
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    min-height: 100vh;
+}
+
+.main-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(10, 22, 40, 0.5);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.main-container > * {
+    position: relative;
+    z-index: 1;
+}
+
+.portfolio-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+h1 {
+    font-size: 96px;
+    font-family: var(--font-family);
+    text-shadow: 0 0 10px var(--text-color),
+                 0 0 10px var(--text-glow),
+                 0 0 30px var(--text-glow),
+                 0 0 40px var(--text-color),
+                 0 0 50px var(--text-glow),
+                 0 0 60px var(--text-color),
+                 0 0 70px var(--text-glow),
+                 0 0 80px #000000;
+    margin-bottom: 10px;
+    margin-top: 0;
+}
+
+.header-info {
+    font-size: 24px;
+    color: var(--text-color);
+    text-shadow: 5px 5px 5px var(--text-glow);
+}
+
+.separator {
+    margin: 0 10px;
+}
+
+h2 {
+    font-size: 32px;
+    text-shadow: 5px 5px 5px var(--text-glow);
+}
+
+h3 {
+    font-size: 20px;
+    margin: 10px 0 5px 0;
+}
+
+p {
+    font-size: 18px;
+    margin-bottom: 10px;
+    text-align: center;
+    text-shadow: 3px 3px 3px var(--text-glow);
+}
+
+.nav-hint {
+    font-size: 16px;
+    opacity: 0.7;
+    margin-top: 30px;
+}
+
+/* Section styles */
+.greeting-section,
+.about-section,
+.projects-section,
+.blog-section {
+    text-align: center;
+    padding: 20px;
+    max-width: 900px;
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+
+.section-hidden {
+    opacity: 0;
+    transform: translateY(20px);
+    position: absolute;
+    pointer-events: none;
+}
+
+.active {
+    opacity: 1;
+    transform: translateY(0);
+    position: relative;
+    pointer-events: auto;
+}
+
+/* About section */
+.github-link {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 24px;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    text-decoration: none;
+    border: 3px solid var(--border-color2);
+    border-radius: 16px;
+    font-size: 18px;
+    transition: all 0.15s ease-in-out;
+    text-shadow: 5px 5px 5px var(--text-glow);
+}
+
+.github-link:hover {
+    background-color: var(--hover-color);
+    border-color: var(--border-color1);
+}
+
+/* Projects section */
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.project-button {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    width: 120px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    height: 100px;
+    padding-left: 20px;
+    padding-right: 20px;
+    
+    transition: background-color 0.15s ease-in-out;
+    border: 3px solid var(--border-color2);
+    border-radius: 16px;
+    position: relative;
+    cursor: pointer;
+}
+
+.project-button img {
+    width: calc(100% - 24px);
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+.project-button:hover {
+    background-color: var(--hover-color);
+    border-color: var(--border-color1);
+}
+
+.button-text {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    text-align: center;
+}
+
+.button-text p {
+    margin: 0;
+    text-shadow: 5px 5px 5px var(--text-glow);
+}
+
+/* Blog section */
+.blog-intro {
+    margin-bottom: 20px;
+}
+
+.blog-intro a {
+    color: var(--text-color);
+    text-decoration: underline;
+    text-shadow: 5px 5px 5px var(--text-glow);
+}
+
+.blog-posts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.blog-post {
+    background-color: var(--background-color);
+    border: 3px solid var(--border-color2);
+    border-radius: 16px;
+    padding: 20px;
+    text-decoration: none;
+    color: var(--text-color);
+    transition: all 0.15s ease-in-out;
+    display: block;
+}
+
+.blog-post:hover {
+    background-color: var(--hover-color);
+    border-color: var(--border-color1);
+    transform: translateY(-5px);
+}
+
+.blog-post h3 {
+    text-shadow: 5px 5px 5px var(--text-glow);
+}
+
+.blog-post p {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+/* Snow particles effect */
+.snowflake {
+    position: fixed;
+    top: -10px;
+    z-index: 9999;
+    user-select: none;
+    cursor: default;
+    animation-name: snowfall;
+    animation-duration: 10s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    opacity: 0.8;
+    width: 8px;
+    height: 8px;
+    background: #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 0 5px #ffffff;
+}
+
+@keyframes snowfall {
+    0% {
+        transform: translateY(0vh) translateX(0);
+    }
+    100% {
+        transform: translateY(100vh) translateX(100px);
+    }
+}
+
+.snowflake:nth-child(1) { left: 1%; animation-duration: 6s; }
+.snowflake:nth-child(2) { left: 10%; animation-duration: 12s; animation-delay: 1s; }
+.snowflake:nth-child(3) { left: 20%; animation-duration: 9s; animation-delay: 2s; }
+.snowflake:nth-child(4) { left: 30%; animation-duration: 11s; animation-delay: 0.5s; }
+.snowflake:nth-child(5) { left: 40%; animation-duration: 13s; }
+.snowflake:nth-child(6) { left: 50%; animation-duration: 7s; animation-delay: 3s; }
+.snowflake:nth-child(7) { left: 60%; animation-duration: 10s; animation-delay: 1.5s; }
+.snowflake:nth-child(8) { left: 70%; animation-duration: 8s; animation-delay: 2.5s; }
+.snowflake:nth-child(9) { left: 80%; animation-duration: 14s; }
+.snowflake:nth-child(10) { left: 90%; animation-duration: 11s; animation-delay: 0.8s; }
+.snowflake:nth-child(11) { left: 5%; animation-duration: 9s; animation-delay: 2s; }
+.snowflake:nth-child(12) { left: 15%; animation-duration: 12s; }
+.snowflake:nth-child(13) { left: 25%; animation-duration: 10s; animation-delay: 1.2s; }
+.snowflake:nth-child(14) { left: 35%; animation-duration: 8s; animation-delay: 0.3s; }
+.snowflake:nth-child(15) { left: 45%; animation-duration: 13s; animation-delay: 1.8s; }
+.snowflake:nth-child(16) { left: 55%; animation-duration: 7s; }
+.snowflake:nth-child(17) { left: 65%; animation-duration: 11s; animation-delay: 2.2s; }
+.snowflake:nth-child(18) { left: 75%; animation-duration: 9s; animation-delay: 0.7s; }
+.snowflake:nth-child(19) { left: 85%; animation-duration: 12s; animation-delay: 1.3s; }
+.snowflake:nth-child(20) { left: 95%; animation-duration: 10s; animation-delay: 0.1s; }
+
+@keyframes mainHeaderAnimation {
+    0% {
+        opacity: 0;
+        transform: translateY(-25%);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0%);
+    }
+}
+
+/* Custom cursor */
+body {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="12" fill="none" stroke="white" stroke-width="2"/><circle cx="16" cy="16" r="4" fill="white"/></svg>') 16 16, auto;
+}
+
+a, button, .project-button {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="12" fill="none" stroke="white" stroke-width="2"/><circle cx="16" cy="16" r="6" fill="white"/></svg>') 16 16, pointer;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 48px;
+    }
+    
+    h2 {
+        font-size: 24px;
+    }
+    
+    .header-info {
+        font-size: 18px;
+    }
+    
+    .blog-posts {
+        grid-template-columns: 1fr;
+    }
+    
+    .button-container {
+        flex-direction: column;
+        align-items: center;
+    }
+}
