@@ -1,6 +1,10 @@
 @import url('/storage/css/themes.css');
 
 :root {
+    --background-image: url('/images/backgrounds/retro/gamesbg.jpg');
+    --border-color1: #2fce56;
+}
+:root.theme-seraph {
     --background-image: url('/images/backgrounds/seraph/gamebg.jpg');
     --border-color1: #4a9eff;
 }

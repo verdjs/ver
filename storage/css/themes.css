@@ -48,6 +48,17 @@
 
 
 :root {
+    --background-image: url('/images/backgrounds/retro/homebg.jpg');
+    --font-family: 'PixelifySans', 'Ubuntu', sans-serif;
+    --text-color: #ffffff; 
+    --border-color1: #2fce56;
+    --border-color2: #375945;
+    --background-color: #2f8154;
+    --hover-color: #258a79;
+    --text-glow: #4ed089;
+}
+
+:root.theme-seraph {
     --background-image: url('/images/backgrounds/seraph/homebg.jpg');
     --font-family: 'Ubuntu', sans-serif;
     --text-color: #e0f0ff;
