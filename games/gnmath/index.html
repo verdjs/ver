@@ -176,28 +176,52 @@
             const container = document.getElementById('game-container');
             container.innerHTML = html;
             
-            // Execute scripts that were in the fetched HTML
+            // Execute scripts sequentially to handle dependencies like jQuery
             const scripts = container.querySelectorAll('script');
-            scripts.forEach(script => {
-                const newScript = document.createElement('script');
-                
-                if (script.src) {
-                    newScript.src = script.src;
-                } else {
-                    newScript.textContent = script.textContent;
-                }
-                
-                Array.from(script.attributes).forEach(attr => {
-                    newScript.setAttribute(attr.name, attr.value);
-                });
-                
-                document.body.appendChild(newScript);
-            });
+            await loadScriptsSequentially(scripts);
             
             // Update page title
             const titleMatch = html.match(/<title>(.*?)<\/title>/i);
             if (titleMatch) {
                 document.title = titleMatch[1];
+            }
+        }
+        
+        // Load scripts in order, waiting for each to complete before the next
+        async function loadScriptsSequentially(scripts) {
+            for (const script of scripts) {
+                await new Promise((resolve, reject) => {
+                    const newScript = document.createElement('script');
+                    
+                    if (script.src) {
+                        // External script - wait for it to load
+                        newScript.src = script.src;
+                        newScript.onload = resolve;
+                        newScript.onerror = () => {
+                            console.warn('Failed to load script:', script.src);
+                            resolve(); // Continue even if a script fails
+                        };
+                    } else {
+                        // Inline script - execute immediately
+                        newScript.textContent = script.textContent;
+                        // Inline scripts execute synchronously, so resolve immediately
+                        setTimeout(resolve, 0);
+                    }
+                    
+                    // Copy attributes
+                    Array.from(script.attributes).forEach(attr => {
+                        if (attr.name !== 'src') { // src already set above
+                            newScript.setAttribute(attr.name, attr.value);
+                        }
+                    });
+                    
+                    document.body.appendChild(newScript);
+                    
+                    // If inline script, it's already executed, resolve
+                    if (!script.src) {
+                        // Already resolved via setTimeout above
+                    }
+                });
             }
         }
         
