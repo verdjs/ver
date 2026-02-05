@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/images/ico.ico" type="image/x-icon">
+    <title>Flight Tracker | Verdis</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        @import url('/storage/css/themes.css');
+
+        :root {
+            --background-image: url('/images/backgrounds/retro/appsbg.jpg');
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background: var(--background-color);
+            background-image: var(--background-image);
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            color: var(--text-color);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .flight-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 3px 3px 6px var(--text-glow);
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--text-color);
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        .back-link:hover {
+            opacity: 1;
+        }
+
+        .controls {
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid var(--border-color2);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            background-color: rgba(0, 0, 0, 0.4);
+            color: var(--text-color);
+            padding: 12px 16px;
+            border: 2px solid var(--border-color2);
+            border-radius: 12px;
+            font-family: var(--font-family);
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--border-color1);
+            box-shadow: 0 0 15px var(--text-glow);
+        }
+
+        button {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            padding: 12px 24px;
+            border: 2px solid var(--border-color2);
+            border-radius: 12px;
+            font-family: var(--font-family);
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background-color: var(--hover-color);
+            border-color: var(--border-color1);
+            box-shadow: 0 0 15px var(--text-glow);
+        }
+
+        .info-text {
+            opacity: 0.7;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        #map {
+            height: 600px;
+            border: 2px solid var(--border-color2);
+            border-radius: 16px;
+            background: rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid var(--border-color2);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px var(--text-glow);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        .flights-list {
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid var(--border-color2);
+            border-radius: 16px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .flight-item {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color2);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .flight-item:hover {
+            background: var(--hover-color);
+            border-color: var(--border-color1);
+            transform: translateX(5px);
+        }
+
+        .flight-item.selected {
+            background: var(--hover-color);
+            border-color: var(--border-color1);
+            box-shadow: 0 0 15px var(--text-glow);
+        }
+
+        .flight-callsign {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .flight-details {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .flight-detail-panel {
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid var(--border-color2);
+            border-radius: 16px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .flight-detail-panel.active {
+            display: block;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            opacity: 0.7;
+        }
+
+        .error {
+            background: rgba(255, 50, 50, 0.2);
+            border-color: #ff4444;
+            color: #ffaaaa;
+            padding: 15px;
+            border-radius: 12px;
+            margin: 10px 0;
+        }
+
+        /* Leaflet marker customization */
+        .plane-marker {
+            background: none;
+            border: none;
+        }
+
+        .plane-icon {
+            font-size: 24px;
+            transform-origin: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="flight-container">
+        <h1>✈️ Flight Tracker</h1>
+        <a href="/index.html" class="back-link">← Back to Portfolio</a>
+
+        <div class="controls">
+            <div class="search-box">
+                <input type="text" id="callsignInput" placeholder="Search by flight callsign (e.g., UAL123)">
+                <button onclick="searchFlight()">Search Flight</button>
+                <button onclick="loadAllFlights()">Show All Flights</button>
+            </div>
+            <div class="info-text">
+                Showing live flight data using OpenSky Network API. Click on flights in the list to center them on the map.
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-value" id="flightCount">0</div>
+                <div class="stat-label">Flights Tracked</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="avgAltitude">0</div>
+                <div class="stat-label">Avg Altitude (ft)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="avgSpeed">0</div>
+                <div class="stat-label">Avg Speed (km/h)</div>
+            </div>
+        </div>
+
+        <div id="flightDetailPanel" class="flight-detail-panel">
+            <h3 style="margin-bottom: 15px;">Selected Flight Details</h3>
+            <div id="selectedFlightInfo"></div>
+        </div>
+
+        <div id="map"></div>
+
+        <div class="flights-list">
+            <h3 style="margin-bottom: 15px;">Active Flights</h3>
+            <div id="flightsList">
+                <div class="loading">Loading flight data...</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="/storage/js/theme.js"></script>
+    <script>
+        let map;
+        let flightMarkers = {};
+        let allFlights = [];
+        let selectedFlight = null;
+        let globalUpdateInterval = null;
+        let selectedUpdateInterval = null;
+        let flightHistory = {}; // Store flight paths
+
+        // Initialize map
+        function initMap() {
+            map = L.map('map').setView([20, 0], 2);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+                maxZoom: 19
+            }).addTo(map);
+        }
+
+        // Convert meters to feet
+        function metersToFeet(meters) {
+            return Math.round(meters * 3.28084);
+        }
+
+        // Create SVG plane icon
+        function createPlaneIcon(heading, isSelected = false) {
+            const color = isSelected ? '#00ff00' : '#3498db';
+            return L.divIcon({
+                className: 'plane-marker',
+                html: `<svg width="24" height="24" viewBox="0 0 24 24" style="transform: rotate(${heading}deg);">
+                    <path d="M12 2 L14 10 L24 12 L14 14 L12 22 L10 14 L0 12 L10 10 Z" 
+                          fill="${color}" stroke="#000" stroke-width="0.5"/>
+                </svg>`,
+                iconSize: [24, 24],
+                iconAnchor: [12, 12]
+            });
+        }
+
+        // Load all flights
+        async function loadAllFlights() {
+            const flightsList = document.getElementById('flightsList');
+            
+            // Only show loading on first load
+            if (allFlights.length === 0) {
+                flightsList.innerHTML = '<div class="loading">Loading flight data...</div>';
+            }
+            
+            try {
+                // Use OpenSky Network API - get all flights
+                const response = await fetch('https://opensky-network.org/api/states/all');
+                const data = await response.json();
+                
+                if (!data.states || data.states.length === 0) {
+                    flightsList.innerHTML = '<div class="error">No flights found</div>';
+                    return;
+                }
+
+                // Get map bounds for filtering
+                const bounds = map.getBounds();
+                const expandedBounds = bounds.pad(0.5); // Expand bounds by 50% to include nearby flights
+
+                // Filter flights: valid position, not on ground, within expanded viewport
+                // Limit to 1000 flights for performance
+                allFlights = data.states
+                    .filter(state => state[5] !== null && state[6] !== null)
+                    .map(state => ({
+                        callsign: (state[1] || '').trim(),
+                        icao24: state[0] || '',
+                        origin: state[2] || '',
+                        longitude: state[5],
+                        latitude: state[6],
+                        altitude: state[7] || 0,
+                        velocity: state[9] || 0,
+                        heading: state[10] || 0,
+                        onGround: state[8] || false,
+                        lastUpdate: state[4],
+                        verticalRate: state[11] || 0
+                    }))
+                    .filter(f => f.callsign && !f.onGround && 
+                            expandedBounds.contains([f.latitude, f.longitude]))
+                    .slice(0, 1000); // Performance limit: 1000 flights max
+
+                // Track flight history
+                allFlights.forEach(flight => {
+                    if (!flightHistory[flight.callsign]) {
+                        flightHistory[flight.callsign] = [];
+                    }
+                    flightHistory[flight.callsign].push({
+                        lat: flight.latitude,
+                        lng: flight.longitude,
+                        time: Date.now()
+                    });
+                    // Keep only last 50 positions
+                    if (flightHistory[flight.callsign].length > 50) {
+                        flightHistory[flight.callsign].shift();
+                    }
+                });
+
+                displayFlights(allFlights);
+                updateStats(allFlights);
+                
+                // Update selected flight details if one is selected
+                if (selectedFlight) {
+                    const updatedFlight = allFlights.find(f => f.callsign === selectedFlight.callsign);
+                    if (updatedFlight) {
+                        await updateSelectedFlightDetails(updatedFlight);
+                    }
+                }
+                
+            } catch (error) {
+                console.error('Error loading flights:', error);
+                if (allFlights.length === 0) {
+                    flightsList.innerHTML = '<div class="error">Failed to load flight data. Please try again.</div>';
+                }
+            }
+        }
+
+        // Load selected flight with 1s updates
+        async function loadSelectedFlight() {
+            if (!selectedFlight) return;
+            
+            try {
+                const response = await fetch('https://opensky-network.org/api/states/all');
+                const data = await response.json();
+                
+                const flight = data.states
+                    .filter(state => state[5] !== null && state[6] !== null)
+                    .map(state => ({
+                        callsign: (state[1] || '').trim(),
+                        icao24: state[0] || '',
+                        origin: state[2] || '',
+                        longitude: state[5],
+                        latitude: state[6],
+                        altitude: state[7] || 0,
+                        velocity: state[9] || 0,
+                        heading: state[10] || 0,
+                        onGround: state[8] || false,
+                        lastUpdate: state[4],
+                        verticalRate: state[11] || 0
+                    }))
+                    .find(f => f.callsign === selectedFlight.callsign);
+
+                if (flight) {
+                    selectedFlight = flight;
+                    
+                    // Update history
+                    if (!flightHistory[flight.callsign]) {
+                        flightHistory[flight.callsign] = [];
+                    }
+                    flightHistory[flight.callsign].push({
+                        lat: flight.latitude,
+                        lng: flight.longitude,
+                        time: Date.now()
+                    });
+                    if (flightHistory[flight.callsign].length > 50) {
+                        flightHistory[flight.callsign].shift();
+                    }
+                    
+                    // Update marker position
+                    if (flightMarkers[flight.callsign]) {
+                        flightMarkers[flight.callsign].setLatLng([flight.latitude, flight.longitude]);
+                        flightMarkers[flight.callsign].setIcon(createPlaneIcon(flight.heading, true));
+                        
+                        // Update popup
+                        flightMarkers[flight.callsign].getPopup().setContent(`
+                            <strong>${flight.callsign}</strong><br>
+                            Altitude: ${metersToFeet(flight.altitude).toLocaleString()} ft<br>
+                            Speed: ${Math.round(flight.velocity * 3.6)} km/h<br>
+                            Heading: ${Math.round(flight.heading)}°
+                        `);
+                    }
+                    
+                    await updateSelectedFlightDetails(flight);
+                }
+            } catch (error) {
+                console.error('Error updating selected flight:', error);
+            }
+        }
+
+        // Get route information for a flight
+        async function getRouteInfo(icao24) {
+            try {
+                const now = Math.floor(Date.now() / 1000);
+                const response = await fetch(`https://opensky-network.org/api/flights/aircraft?icao24=${icao24}&begin=${now - 86400}&end=${now}`);
+                const data = await response.json();
+                
+                if (data && data.length > 0) {
+                    const flight = data[0];
+                    return {
+                        origin: flight.estDepartureAirport || 'Unknown',
+                        destination: flight.estArrivalAirport || 'Unknown'
+                    };
+                }
+            } catch (error) {
+                console.error('Error fetching route info:', error);
+            }
+            return { origin: 'Unknown', destination: 'Unknown' };
+        }
+
+        // Update selected flight details panel
+        async function updateSelectedFlightDetails(flight) {
+            const panel = document.getElementById('flightDetailPanel');
+            const info = document.getElementById('selectedFlightInfo');
+            
+            panel.classList.add('active');
+            
+            // Get route info
+            const routeInfo = await getRouteInfo(flight.icao24);
+            
+            const history = flightHistory[flight.callsign] || [];
+            const historyText = history.length > 1 ? 
+                `${history.length} positions tracked` : 
+                'No history yet';
+            
+            info.innerHTML = `
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">Callsign</div>
+                        <div class="detail-value">${flight.callsign}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">ICAO24</div>
+                        <div class="detail-value">${flight.icao24}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Origin</div>
+                        <div class="detail-value">${routeInfo.origin}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Destination</div>
+                        <div class="detail-value">${routeInfo.destination}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Altitude</div>
+                        <div class="detail-value">${metersToFeet(flight.altitude).toLocaleString()} ft</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Speed</div>
+                        <div class="detail-value">${Math.round(flight.velocity * 3.6)} km/h</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Heading</div>
+                        <div class="detail-value">${Math.round(flight.heading)}°</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Vertical Rate</div>
+                        <div class="detail-value">${Math.round(flight.verticalRate)} m/s</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Position</div>
+                        <div class="detail-value">${flight.latitude.toFixed(4)}, ${flight.longitude.toFixed(4)}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Flight History</div>
+                        <div class="detail-value">${historyText}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Search for specific flight
+        async function searchFlight() {
+            const callsign = document.getElementById('callsignInput').value.trim().toUpperCase();
+            if (!callsign) {
+                alert('Please enter a flight callsign');
+                return;
+            }
+
+            const flightsList = document.getElementById('flightsList');
+            flightsList.innerHTML = '<div class="loading">Searching for flight...</div>';
+
+            try {
+                const response = await fetch(`https://opensky-network.org/api/states/all`);
+                const data = await response.json();
+                
+                const flight = data.states
+                    .filter(state => state[5] !== null && state[6] !== null)
+                    .map(state => ({
+                        callsign: (state[1] || '').trim(),
+                        icao24: state[0] || '',
+                        origin: state[2] || '',
+                        longitude: state[5],
+                        latitude: state[6],
+                        altitude: state[7] || 0,
+                        velocity: state[9] || 0,
+                        heading: state[10] || 0,
+                        onGround: state[8] || false,
+                        lastUpdate: state[4],
+                        verticalRate: state[11] || 0
+                    }))
+                    .find(f => f.callsign === callsign);
+
+                if (flight) {
+                    displayFlights([flight]);
+                    updateStats([flight]);
+                    selectFlight(flight);
+                } else {
+                    flightsList.innerHTML = `<div class="error">Flight ${callsign} not found</div>`;
+                }
+            } catch (error) {
+                console.error('Error searching flight:', error);
+                flightsList.innerHTML = '<div class="error">Failed to search flight. Please try again.</div>';
+            }
+        }
+
+        // Display flights on map and list
+        function displayFlights(flights) {
+            // Efficient marker updates - only update/add/remove changed markers
+            const currentCallsigns = new Set(Object.keys(flightMarkers));
+            const newCallsigns = new Set(flights.map(f => f.callsign));
+            
+            // Remove markers no longer in view
+            currentCallsigns.forEach(callsign => {
+                if (!newCallsigns.has(callsign)) {
+                    map.removeLayer(flightMarkers[callsign]);
+                    delete flightMarkers[callsign];
+                }
+            });
+
+            // Add or update markers
+            flights.forEach(flight => {
+                const isSelected = selectedFlight && selectedFlight.callsign === flight.callsign;
+                
+                if (flightMarkers[flight.callsign]) {
+                    // Update existing marker
+                    const marker = flightMarkers[flight.callsign];
+                    marker.setLatLng([flight.latitude, flight.longitude]);
+                    marker.setIcon(createPlaneIcon(flight.heading, isSelected));
+                    marker.getPopup().setContent(`
+                        <strong>${flight.callsign}</strong><br>
+                        Altitude: ${metersToFeet(flight.altitude).toLocaleString()} ft<br>
+                        Speed: ${Math.round(flight.velocity * 3.6)} km/h<br>
+                        Heading: ${Math.round(flight.heading)}°
+                    `);
+                } else {
+                    // Create new marker
+                    const marker = L.marker([flight.latitude, flight.longitude], {
+                        icon: createPlaneIcon(flight.heading, isSelected)
+                    }).addTo(map);
+
+                    marker.bindPopup(`
+                        <strong>${flight.callsign}</strong><br>
+                        Altitude: ${metersToFeet(flight.altitude).toLocaleString()} ft<br>
+                        Speed: ${Math.round(flight.velocity * 3.6)} km/h<br>
+                        Heading: ${Math.round(flight.heading)}°
+                    `);
+                    
+                    marker.on('click', () => selectFlight(flight));
+                    flightMarkers[flight.callsign] = marker;
+                }
+            });
+
+            // Update flights list
+            const flightsList = document.getElementById('flightsList');
+            flightsList.innerHTML = flights.map(flight => `
+                <div class="flight-item ${selectedFlight && selectedFlight.callsign === flight.callsign ? 'selected' : ''}" 
+                     onclick='selectFlight(${JSON.stringify(flight).replace(/'/g, "&#39;")})'>
+                    <div class="flight-callsign">${flight.callsign}</div>
+                    <div class="flight-details">
+                        Altitude: ${metersToFeet(flight.altitude).toLocaleString()} ft • 
+                        Speed: ${Math.round(flight.velocity * 3.6)} km/h • 
+                        Heading: ${Math.round(flight.heading)}°
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Select a flight for detailed tracking
+        function selectFlight(flight) {
+            selectedFlight = flight;
+            
+            // Clear existing 1s interval if any
+            if (selectedUpdateInterval) {
+                clearInterval(selectedUpdateInterval);
+            }
+            
+            // Start 1s updates for selected flight
+            selectedUpdateInterval = setInterval(loadSelectedFlight, 1000);
+            
+            // Center map and show popup
+            map.setView([flight.latitude, flight.longitude], 8);
+            if (flightMarkers[flight.callsign]) {
+                flightMarkers[flight.callsign].openPopup();
+            }
+            
+            // Update selected flight details
+            updateSelectedFlightDetails(flight);
+            
+            // Update UI to highlight selected flight
+            document.querySelectorAll('.flight-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            event.target.closest('.flight-item')?.classList.add('selected');
+        }
+
+        // Update statistics
+        function updateStats(flights) {
+            document.getElementById('flightCount').textContent = flights.length;
+            
+            const avgAlt = flights.reduce((sum, f) => sum + f.altitude, 0) / flights.length;
+            document.getElementById('avgAltitude').textContent = metersToFeet(avgAlt).toLocaleString();
+            
+            const avgSpeed = flights.reduce((sum, f) => sum + (f.velocity * 3.6), 0) / flights.length;
+            document.getElementById('avgSpeed').textContent = Math.round(avgSpeed);
+        }
+
+        // Initialize on page load
+        window.addEventListener('load', () => {
+            initMap();
+            loadAllFlights();
+            
+            // Auto-refresh every 5 seconds for all flights
+            globalUpdateInterval = setInterval(() => {
+                loadAllFlights();
+            }, 5000);
+        });
+    </script>
+</body>
+</html>

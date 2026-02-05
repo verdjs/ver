@@ -1,7 +1,10 @@
 @import url('/storage/css/themes.css');
 
 :root {
-    --background-image: url('/images/backgrounds/verdis/hostbg.jpg');
+    --background-image: url('/images/backgrounds/retro/hostbg.jpg');
+}
+:root.theme-seraph {
+    --background-image: url('/images/backgrounds/seraph/hostbg.jpg');
 }
 :root.theme-azurite {
     --background-image: url('/images/backgrounds/azure/hostbg.jpg');
