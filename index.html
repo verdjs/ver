@@ -154,10 +154,8 @@
                 }
             } else if (event.key === 'ArrowLeft') {
                 event.preventDefault();
-                if (currentSection === 'greeting' || currentSection === 'projects') {
+                if (currentSection === 'greeting') {
                     showSection('projects');
-                } else if (currentSection === 'projects') {
-                    showSection('greeting');
                 }
             } else if (event.key === 'ArrowDown') {
                 event.preventDefault();
@@ -217,12 +215,16 @@
 
         function type() {
             setTimeout(() => {
-                h1.textContent = '';
+                let currentText = '';
                 for (let i = 0; i < text.length; i++) {
                     setTimeout(() => {
-                        h1.textContent += text[i];
+                        currentText = text.substring(0, i + 1);
+                        h1.innerHTML = currentText + '<span id="cursor"></span>';
                         if (i === text.length - 1) {
-                            cursor.style.display = "none";
+                            const finalCursor = document.getElementById("cursor");
+                            if (finalCursor) {
+                                finalCursor.style.display = "none";
+                            }
                         }
                     }, i * typingDelay);
                 }
