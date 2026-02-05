@@ -5,32 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Loading Game...</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
         body {
             margin: 0;
             padding: 0;
-            overflow: hidden;
             background: #000;
             color: #fff;
             font-family: Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
         }
         
         #loading {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
             text-align: center;
-            z-index: 9999;
-        }
-        
-        #loading.hidden {
-            display: none;
         }
         
         .spinner {
@@ -50,21 +38,20 @@
         
         #error {
             display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
             text-align: center;
             padding: 40px;
             background: rgba(255, 0, 0, 0.1);
             border: 2px solid #ff4444;
             border-radius: 10px;
-            max-width: 80%;
-            z-index: 10000;
+            max-width: 600px;
+        }
+        
+        #error h2 {
+            margin-top: 0;
         }
         
         #error button {
-            margin-top: 20px;
+            margin: 10px 5px;
             padding: 10px 20px;
             background: #3498db;
             color: white;
@@ -78,23 +65,10 @@
             background: #2980b9;
         }
         
-        #game-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-        }
-        
-        #game-iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-            display: none;
+        #error-details {
+            font-size: 12px;
+            opacity: 0.7;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -107,15 +81,12 @@
     <div id="error">
         <h2>Failed to Load Game</h2>
         <p id="error-message"></p>
-        <p id="error-details" style="font-size: 12px; opacity: 0.7; margin-top: 10px;"></p>
-        <div style="margin-top: 20px;">
+        <p id="error-details"></p>
+        <div>
             <button onclick="window.history.back()">Go Back</button>
-            <button onclick="window.location.href='../index.html'" style="margin-left: 10px;">Browse All Games</button>
+            <button onclick="window.location.href='../index.html'">Browse All Games</button>
         </div>
     </div>
-    
-    <div id="game-container"></div>
-    <iframe id="game-iframe"></iframe>
     
     <script>
         // Get game parameter from URL
@@ -129,160 +100,44 @@
         }
         
         async function loadGame(gameFile) {
-            const cdnUrl = `https://cdn.jsdelivr.net/gh/gn-math/html@main/${gameFile}`;
-            console.log('Loading game from:', cdnUrl);
+            const htmlURL = "https://cdn.jsdelivr.net/gh/gn-math/html@main";
+            const url = `${htmlURL}/${gameFile}?t=${Date.now()}`;
             
-            // Try fetch first (better integration)
+            console.log('Loading game from:', url);
+            
             try {
-                await loadGameViaFetch(gameFile, cdnUrl);
-            } catch (fetchError) {
-                console.log('Fetch failed, trying iframe fallback:', fetchError.message);
-                // Fall back to iframe method
-                loadGameViaIframe(cdnUrl, gameFile);
-            }
-        }
-        
-        async function loadGameViaFetch(gameFile, cdnUrl) {
-            const response = await fetch(cdnUrl);
-            
-            if (!response.ok) {
-                if (response.status === 404) {
-                    throw new Error(`Game file not found: ${gameFile}`);
-                }
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            
-            let html = await response.text();
-            
-            // Get the base path for relative URLs
-            const basePath = `https://cdn.jsdelivr.net/gh/gn-math/html@main/`;
-            
-            // Fix relative URLs in the HTML to point to CDN
-            html = html.replace(/src="(?!https?:\/\/|\/\/|data:)([^"]+)"/gi, (match, path) => {
-                return `src="${basePath}${path}"`;
-            });
-            
-            html = html.replace(/href="(?!https?:\/\/|\/\/|data:|#)([^"]+)"/gi, (match, path) => {
-                return `href="${basePath}${path}"`;
-            });
-            
-            // Fix background images and other URL references in CSS
-            html = html.replace(/url\(["']?(?!https?:\/\/|\/\/|data:)([^"')]+)["']?\)/gi, (match, path) => {
-                return `url("${basePath}${path}")`;
-            });
-            
-            // Add a base tag for any remaining relative URLs
-            if (!html.toLowerCase().includes('<base')) {
-                html = html.replace(/<head>/i, `<head>\n    <base href="${basePath}">`);
-            }
-            
-            // Hide loading
-            document.getElementById('loading').classList.add('hidden');
-            
-            // Inject the HTML content
-            const container = document.getElementById('game-container');
-            container.innerHTML = html;
-            
-            // Execute scripts sequentially to handle dependencies like jQuery
-            const scripts = container.querySelectorAll('script');
-            await loadScriptsSequentially(scripts);
-            
-            // Update page title
-            const titleMatch = html.match(/<title>(.*?)<\/title>/i);
-            if (titleMatch) {
-                document.title = titleMatch[1];
-            }
-        }
-        
-        // Load scripts in order, waiting for each to complete before the next
-        async function loadScriptsSequentially(scripts) {
-            for (const script of scripts) {
-                await new Promise((resolve, reject) => {
-                    const newScript = document.createElement('script');
-                    
-                    if (script.src) {
-                        // External script - wait for it to load
-                        newScript.src = script.src;
-                        newScript.onload = resolve;
-                        newScript.onerror = () => {
-                            console.warn('Failed to load script:', script.src);
-                            resolve(); // Continue even if a script fails
-                        };
-                    } else {
-                        // Inline script - execute immediately
-                        newScript.textContent = script.textContent;
-                        // Inline scripts execute synchronously, so resolve immediately
-                        setTimeout(resolve, 0);
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        throw new Error(`Game file not found: ${gameFile}`);
                     }
-                    
-                    // Copy attributes
-                    Array.from(script.attributes).forEach(attr => {
-                        if (attr.name !== 'src') { // src already set above
-                            newScript.setAttribute(attr.name, attr.value);
-                        }
-                    });
-                    
-                    document.body.appendChild(newScript);
-                    
-                    // If inline script, it's already executed, resolve
-                    if (!script.src) {
-                        // Already resolved via setTimeout above
-                    }
-                });
-            }
-        }
-        
-        function loadGameViaIframe(cdnUrl, gameFile) {
-            const iframe = document.getElementById('game-iframe');
-            iframe.style.display = 'block';
-            iframe.src = cdnUrl;
-            
-            // Hide loading after a short delay
-            setTimeout(() => {
-                document.getElementById('loading').classList.add('hidden');
-            }, 2000);
-            
-            // Check if iframe loaded successfully
-            iframe.onload = () => {
-                document.getElementById('loading').classList.add('hidden');
-                console.log('Game loaded via iframe');
-            };
-            
-            iframe.onerror = () => {
-                showError('Failed to load game content. The game file may not exist or the CDN may be unavailable.', `Attempted URL: ${cdnUrl}`);
-            };
-            
-            // Timeout fallback - check if still loading after delay
-            setTimeout(() => {
-                try {
-                    // Check if iframe is accessible (will throw error if blocked)
-                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                    if (!iframeDoc.body || iframeDoc.body.innerHTML.trim() === '') {
-                        console.log('Iframe appears empty or blocked');
-                    }
-                } catch (e) {
-                    // Cross-origin error is expected for CDN content
-                    console.log('Iframe loaded (cross-origin):', e.message);
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 
-                // After timeout, if loading is still visible, it might be a 404
-                if (!document.getElementById('loading').classList.contains('hidden')) {
-                    document.getElementById('loading').classList.add('hidden');
-                    showError(
-                        `Game file not found: ${gameFile}`,
-                        `The game may not be available on the CDN. Try a different game or report this issue.`
-                    );
-                }
-            }, 5000);
+                const html = await response.text();
+                
+                // Use the same pattern as singlefile.html - write HTML directly to document
+                document.open();
+                document.write(html);
+                document.close();
+                
+            } catch (error) {
+                console.error('Error loading game:', error);
+                showError(
+                    error.message || 'Failed to load game',
+                    `Attempted URL: ${url}\n\nThis game may not be available on the CDN. Please try a different game.`
+                );
+            }
         }
         
         function showError(message, details = '') {
-            document.getElementById('loading').classList.add('hidden');
-            document.getElementById('error').style.display = 'block';
+            document.getElementById('loading').style.display = 'none';
+            const errorDiv = document.getElementById('error');
+            errorDiv.style.display = 'block';
             document.getElementById('error-message').textContent = message;
             if (details) {
                 document.getElementById('error-details').textContent = details;
-                document.getElementById('error-details').style.display = 'block';
             }
         }
     </script>
