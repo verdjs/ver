@@ -314,6 +314,20 @@
             return Math.round(meters * 3.28084);
         }
 
+        // Create SVG plane icon
+        function createPlaneIcon(heading, isSelected = false) {
+            const color = isSelected ? '#00ff00' : '#3498db';
+            return L.divIcon({
+                className: 'plane-marker',
+                html: `<svg width="24" height="24" viewBox="0 0 24 24" style="transform: rotate(${heading}deg);">
+                    <path d="M12 2 L14 10 L24 12 L14 14 L12 22 L10 14 L0 12 L10 10 Z" 
+                          fill="${color}" stroke="#000" stroke-width="0.5"/>
+                </svg>`,
+                iconSize: [24, 24],
+                iconAnchor: [12, 12]
+            });
+        }
+
         // Load all flights
         async function loadAllFlights() {
             const flightsList = document.getElementById('flightsList');
@@ -324,7 +338,7 @@
             }
             
             try {
-                // Use OpenSky Network API - get all flights (NO LIMIT)
+                // Use OpenSky Network API - get all flights
                 const response = await fetch('https://opensky-network.org/api/states/all');
                 const data = await response.json();
                 
@@ -333,7 +347,12 @@
                     return;
                 }
 
-                // Filter out flights with null positions - NO SLICE LIMIT
+                // Get map bounds for filtering
+                const bounds = map.getBounds();
+                const expandedBounds = bounds.pad(0.5); // Expand bounds by 50% to include nearby flights
+
+                // Filter flights: valid position, not on ground, within expanded viewport
+                // Limit to 1000 flights for performance
                 allFlights = data.states
                     .filter(state => state[5] !== null && state[6] !== null)
                     .map(state => ({
@@ -349,7 +368,9 @@
                         lastUpdate: state[4],
                         verticalRate: state[11] || 0
                     }))
-                    .filter(f => f.callsign && !f.onGround);
+                    .filter(f => f.callsign && !f.onGround && 
+                            expandedBounds.contains([f.latitude, f.longitude]))
+                    .slice(0, 1000); // Performance limit: 1000 flights max
 
                 // Track flight history
                 allFlights.forEach(flight => {
@@ -430,11 +451,7 @@
                     // Update marker position
                     if (flightMarkers[flight.callsign]) {
                         flightMarkers[flight.callsign].setLatLng([flight.latitude, flight.longitude]);
-                        flightMarkers[flight.callsign].setIcon(L.divIcon({
-                            className: 'plane-marker',
-                            html: `<div class="plane-icon" style="transform: rotate(${flight.heading}deg);">✈️</div>`,
-                            iconSize: [30, 30]
-                        }));
+                        flightMarkers[flight.callsign].setIcon(createPlaneIcon(flight.heading, true));
                         
                         // Update popup
                         flightMarkers[flight.callsign].getPopup().setContent(`
@@ -580,30 +597,49 @@
 
         // Display flights on map and list
         function displayFlights(flights) {
-            // Clear existing markers
-            Object.values(flightMarkers).forEach(marker => map.removeLayer(marker));
-            flightMarkers = {};
+            // Efficient marker updates - only update/add/remove changed markers
+            const currentCallsigns = new Set(Object.keys(flightMarkers));
+            const newCallsigns = new Set(flights.map(f => f.callsign));
+            
+            // Remove markers no longer in view
+            currentCallsigns.forEach(callsign => {
+                if (!newCallsigns.has(callsign)) {
+                    map.removeLayer(flightMarkers[callsign]);
+                    delete flightMarkers[callsign];
+                }
+            });
 
-            // Add new markers
+            // Add or update markers
             flights.forEach(flight => {
-                const marker = L.marker([flight.latitude, flight.longitude], {
-                    icon: L.divIcon({
-                        className: 'plane-marker',
-                        html: `<div class="plane-icon" style="transform: rotate(${flight.heading}deg);">✈️</div>`,
-                        iconSize: [30, 30]
-                    })
-                }).addTo(map);
-
-                marker.bindPopup(`
-                    <strong>${flight.callsign}</strong><br>
-                    Altitude: ${metersToFeet(flight.altitude).toLocaleString()} ft<br>
-                    Speed: ${Math.round(flight.velocity * 3.6)} km/h<br>
-                    Heading: ${Math.round(flight.heading)}°
-                `);
+                const isSelected = selectedFlight && selectedFlight.callsign === flight.callsign;
                 
-                marker.on('click', () => selectFlight(flight));
+                if (flightMarkers[flight.callsign]) {
+                    // Update existing marker
+                    const marker = flightMarkers[flight.callsign];
+                    marker.setLatLng([flight.latitude, flight.longitude]);
+                    marker.setIcon(createPlaneIcon(flight.heading, isSelected));
+                    marker.getPopup().setContent(`
+                        <strong>${flight.callsign}</strong><br>
+                        Altitude: ${metersToFeet(flight.altitude).toLocaleString()} ft<br>
+                        Speed: ${Math.round(flight.velocity * 3.6)} km/h<br>
+                        Heading: ${Math.round(flight.heading)}°
+                    `);
+                } else {
+                    // Create new marker
+                    const marker = L.marker([flight.latitude, flight.longitude], {
+                        icon: createPlaneIcon(flight.heading, isSelected)
+                    }).addTo(map);
 
-                flightMarkers[flight.callsign] = marker;
+                    marker.bindPopup(`
+                        <strong>${flight.callsign}</strong><br>
+                        Altitude: ${metersToFeet(flight.altitude).toLocaleString()} ft<br>
+                        Speed: ${Math.round(flight.velocity * 3.6)} km/h<br>
+                        Heading: ${Math.round(flight.heading)}°
+                    `);
+                    
+                    marker.on('click', () => selectFlight(flight));
+                    flightMarkers[flight.callsign] = marker;
+                }
             });
 
             // Update flights list
