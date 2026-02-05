@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="/storage/css/music.css">
     <title>Music Player | Verdis</title>
 
-    <meta name="description" content="Music player powered by YouTube Music">
+    <meta name="description" content="Music player powered by Piped API">
     <meta property="og:site_name" content="verdjs">
     <meta property="og:title" content="verdjs music player">
     <meta property="og:type" content="website">
@@ -61,7 +61,7 @@
                 </div>
                 
                 <div id="playerFrame" class="player-frame">
-                    <!-- YouTube player will be embedded here -->
+                    <!-- Audio player will be embedded here -->
                 </div>
 
                 <div class="controls">
@@ -83,63 +83,78 @@
     <script>
         let playlist = [];
         let currentTrackIndex = -1;
-        let player = null;
-        let playerReady = false;
+        let audioPlayer = null;
+        
+        // Piped API configuration
+        const PIPED_API = 'https://pipedapi.kavin.rocks';
 
-        // Load YouTube IFrame API
-        const tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        const firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-        // Initialize YouTube Player
-        function onYouTubeIframeAPIReady() {
-            playerReady = true;
-        }
-
-        // Search for music using YouTube
+        // Search for music using Piped API
         async function searchMusic(query) {
             const searchResults = document.getElementById('searchResults');
             searchResults.innerHTML = '<p>Searching...</p>';
 
             try {
-                // Note: In production, you'd use YouTube Data API with proper API key
-                // For this demo, we'll create a simple interface
-                searchResults.innerHTML = `
-                    <div class="result-item">
-                        <p><strong>Note:</strong> This is a demo music player interface.</p>
-                        <p>To enable full YouTube Music integration:</p>
-                        <ol style="text-align: left; max-width: 500px; margin: 0 auto;">
-                            <li>Get a YouTube Data API key from Google Cloud Console</li>
-                            <li>Use the YouTube Data API v3 to search for videos</li>
-                            <li>Display results and allow users to add to playlist</li>
-                            <li>Use YouTube IFrame API for playback</li>
-                        </ol>
-                        <p style="margin-top: 20px;">For now, you can manually add YouTube video IDs below:</p>
-                        <input type="text" id="videoId" placeholder="Enter YouTube Video ID" style="margin-top: 10px;">
-                        <button onclick="addManualTrack()">Add to Playlist</button>
+                const response = await fetch(`${PIPED_API}/search?q=${encodeURIComponent(query)}&filter=music_songs`);
+                
+                if (!response.ok) {
+                    throw new Error('Search failed');
+                }
+                
+                const data = await response.json();
+                const items = data.items || [];
+                
+                if (items.length === 0) {
+                    searchResults.innerHTML = '<p>No results found. Try a different search term.</p>';
+                    return;
+                }
+                
+                // Display search results
+                searchResults.innerHTML = items.slice(0, 10).map(item => `
+                    <div class="result-item" onclick="addSearchResult('${item.url.replace('/watch?v=', '')}', '${escapeHtml(item.title)}', '${escapeHtml(item.uploaderName || 'Unknown Artist')}')">
+                        <img src="${item.thumbnail}" alt="${escapeHtml(item.title)}" style="width: 120px; height: 90px; object-fit: cover; border-radius: 8px; margin-right: 15px;">
+                        <div style="flex: 1;">
+                            <h4 style="margin: 0 0 5px 0;">${escapeHtml(item.title)}</h4>
+                            <p style="margin: 0; opacity: 0.7; font-size: 14px;">${escapeHtml(item.uploaderName || 'Unknown Artist')}</p>
+                            ${item.duration ? `<p style="margin: 5px 0 0 0; opacity: 0.7; font-size: 12px;">Duration: ${formatDuration(item.duration)}</p>` : ''}
+                        </div>
+                        <button onclick="event.stopPropagation(); addSearchResult('${item.url.replace('/watch?v=', '')}', '${escapeHtml(item.title)}', '${escapeHtml(item.uploaderName || 'Unknown Artist')}')" style="padding: 8px 16px;">Add</button>
                     </div>
-                `;
+                `).join('');
+                
             } catch (error) {
-                searchResults.innerHTML = '<p>Search failed. Please try again.</p>';
+                console.error('Search error:', error);
+                searchResults.innerHTML = '<p>Search failed. Please try again or use a different Piped instance.</p>';
             }
         }
-
-        function addManualTrack() {
-            const videoId = document.getElementById('videoId').value.trim();
-            if (!videoId) {
-                alert('Please enter a video ID');
-                return;
-            }
-
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        function formatDuration(seconds) {
+            if (!seconds) return '';
+            const minutes = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${minutes}:${secs.toString().padStart(2, '0')}`;
+        }
+        
+        function addSearchResult(videoId, title, artist) {
             const track = {
                 id: videoId,
-                title: `Track ${playlist.length + 1}`,
-                videoId: videoId
+                videoId: videoId,
+                title: title,
+                artist: artist
             };
-
+            
             addToPlaylist(track);
-            document.getElementById('videoId').value = '';
+            
+            // Clear search results after adding
+            document.getElementById('searchResults').innerHTML = '<p style="color: #4ade80;">Added to playlist!</p>';
+            setTimeout(() => {
+                document.getElementById('searchResults').innerHTML = '';
+            }, 2000);
         }
 
         function addToPlaylist(track) {
@@ -161,33 +176,64 @@
 
             playlistEl.innerHTML = playlist.map((track, index) => `
                 <div class="playlist-item ${index === currentTrackIndex ? 'active' : ''}" onclick="playTrack(${index})">
-                    <span>${index + 1}. ${track.title}</span>
+                    <span>${index + 1}. ${track.title}${track.artist ? ` - ${track.artist}` : ''}</span>
                     <button onclick="event.stopPropagation(); removeTrack(${index})">×</button>
                 </div>
             `).join('');
         }
 
-        function playTrack(index) {
+        async function playTrack(index) {
             if (index < 0 || index >= playlist.length) return;
 
             currentTrackIndex = index;
             const track = playlist[index];
 
             document.getElementById('currentTrack').innerHTML = `
-                <p><strong>Now Playing:</strong> ${track.title}</p>
+                <p><strong>Now Playing:</strong> ${track.title}${track.artist ? ` - ${track.artist}` : ''}</p>
             `;
-
+            
             const playerFrame = document.getElementById('playerFrame');
-            playerFrame.innerHTML = `
-                <iframe 
-                    width="100%" 
-                    height="315" 
-                    src="https://www.youtube.com/embed/${track.videoId}?autoplay=1&enablejsapi=1" 
-                    frameborder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowfullscreen>
-                </iframe>
-            `;
+            playerFrame.innerHTML = '<p>Loading audio...</p>';
+
+            try {
+                // Fetch stream info from Piped API
+                const response = await fetch(`${PIPED_API}/streams/${track.videoId}`);
+                
+                if (!response.ok) {
+                    throw new Error('Failed to get stream info');
+                }
+                
+                const streamData = await response.json();
+                
+                // Get the best audio stream
+                const audioStream = streamData.audioStreams?.find(s => s.quality === 'AUDIO_QUALITY_MEDIUM') 
+                    || streamData.audioStreams?.[0];
+                
+                if (!audioStream) {
+                    throw new Error('No audio stream available');
+                }
+                
+                // Create HTML5 audio player
+                playerFrame.innerHTML = `
+                    <audio id="audioPlayer" controls autoplay style="width: 100%;">
+                        <source src="${audioStream.url}" type="${audioStream.mimeType || 'audio/mp4'}">
+                        Your browser does not support the audio element.
+                    </audio>
+                `;
+                
+                audioPlayer = document.getElementById('audioPlayer');
+                
+                // Auto-play next track when current ends
+                audioPlayer.onended = () => {
+                    if (currentTrackIndex < playlist.length - 1) {
+                        playTrack(currentTrackIndex + 1);
+                    }
+                };
+                
+            } catch (error) {
+                console.error('Playback error:', error);
+                playerFrame.innerHTML = '<p style="color: #ff4444;">Failed to load audio. Please try another track.</p>';
+            }
 
             updatePlaylistUI();
             updateControls();
@@ -245,7 +291,13 @@
         });
 
         document.getElementById('playPauseBtn').addEventListener('click', () => {
-            if (currentTrackIndex >= 0) {
+            if (audioPlayer) {
+                if (audioPlayer.paused) {
+                    audioPlayer.play();
+                } else {
+                    audioPlayer.pause();
+                }
+            } else if (currentTrackIndex >= 0) {
                 playTrack(currentTrackIndex);
             }
         });
