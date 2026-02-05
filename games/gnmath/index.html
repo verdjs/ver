@@ -107,7 +107,11 @@
     <div id="error">
         <h2>Failed to Load Game</h2>
         <p id="error-message"></p>
-        <button onclick="window.history.back()">Go Back</button>
+        <p id="error-details" style="font-size: 12px; opacity: 0.7; margin-top: 10px;"></p>
+        <div style="margin-top: 20px;">
+            <button onclick="window.history.back()">Go Back</button>
+            <button onclick="window.location.href='../index.html'" style="margin-left: 10px;">Browse All Games</button>
+        </div>
     </div>
     
     <div id="game-container"></div>
@@ -119,7 +123,7 @@
         const gameFile = urlParams.get('game');
         
         if (!gameFile) {
-            showError('No game specified in URL');
+            showError('No game specified in URL', 'Please use a valid game link from the games page.');
         } else {
             loadGame(gameFile);
         }
@@ -134,7 +138,7 @@
             } catch (fetchError) {
                 console.log('Fetch failed, trying iframe fallback:', fetchError.message);
                 // Fall back to iframe method
-                loadGameViaIframe(cdnUrl);
+                loadGameViaIframe(cdnUrl, gameFile);
             }
         }
         
@@ -142,6 +146,9 @@
             const response = await fetch(cdnUrl);
             
             if (!response.ok) {
+                if (response.status === 404) {
+                    throw new Error(`Game file not found: ${gameFile}`);
+                }
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             
@@ -225,7 +232,7 @@
             }
         }
         
-        function loadGameViaIframe(cdnUrl) {
+        function loadGameViaIframe(cdnUrl, gameFile) {
             const iframe = document.getElementById('game-iframe');
             iframe.style.display = 'block';
             iframe.src = cdnUrl;
@@ -242,10 +249,10 @@
             };
             
             iframe.onerror = () => {
-                showError('Failed to load game content. The CDN may be blocked or unavailable.');
+                showError('Failed to load game content. The game file may not exist or the CDN may be unavailable.', `Attempted URL: ${cdnUrl}`);
             };
             
-            // Timeout fallback
+            // Timeout fallback - check if still loading after delay
             setTimeout(() => {
                 try {
                     // Check if iframe is accessible (will throw error if blocked)
@@ -257,13 +264,26 @@
                     // Cross-origin error is expected for CDN content
                     console.log('Iframe loaded (cross-origin):', e.message);
                 }
-            }, 3000);
+                
+                // After timeout, if loading is still visible, it might be a 404
+                if (!document.getElementById('loading').classList.contains('hidden')) {
+                    document.getElementById('loading').classList.add('hidden');
+                    showError(
+                        `Game file not found: ${gameFile}`,
+                        `The game may not be available on the CDN. Try a different game or report this issue.`
+                    );
+                }
+            }, 5000);
         }
         
-        function showError(message) {
+        function showError(message, details = '') {
             document.getElementById('loading').classList.add('hidden');
             document.getElementById('error').style.display = 'block';
             document.getElementById('error-message').textContent = message;
+            if (details) {
+                document.getElementById('error-details').textContent = details;
+                document.getElementById('error-details').style.display = 'block';
+            }
         }
     </script>
 </body>
