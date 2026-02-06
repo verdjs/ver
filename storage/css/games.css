@@ -378,12 +378,12 @@ p {
     animation-duration: 10s;
     animation-timing-function: linear;
     animation-iteration-count: infinite;
-    opacity: 0.8;
-    width: 8px;
-    height: 8px;
-    background: #ffffff;
-    border-radius: 50%;
-    box-shadow: 0 0 5px #ffffff;
+    opacity: 0.6;
+    width: 6px;
+    height: 6px;
+    background: linear-gradient(45deg, #ff00ff, #00ffff);
+    border: 1px solid #ffffff;
+    box-shadow: 0 0 3px #ff00ff, 0 0 6px #00ffff;
 }
 
 @keyframes snowfall {
