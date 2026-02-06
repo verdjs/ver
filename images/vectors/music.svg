@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- Musical note stem -->
+  <rect x="55" y="25" width="4" height="45" fill="#9B59B6" stroke="#7D3C98" stroke-width="1"/>
+  
+  <!-- Musical note head -->
+  <ellipse cx="52" cy="70" rx="8" ry="6" fill="#9B59B6" stroke="#7D3C98" stroke-width="1.5"/>
+  
+  <!-- Second note stem -->
+  <rect x="70" y="30" width="4" height="40" fill="#9B59B6" stroke="#7D3C98" stroke-width="1"/>
+  
+  <!-- Second note head -->
+  <ellipse cx="67" cy="70" rx="8" ry="6" fill="#9B59B6" stroke="#7D3C98" stroke-width="1.5"/>
+  
+  <!-- Connecting beam -->
+  <path d="M 55 25 L 70 30 L 74 30 L 59 25 Z" fill="#7D3C98"/>
+  
+  <!-- Waveform background -->
+  <path d="M 20 50 Q 25 45, 30 50 T 40 50 T 50 50" fill="none" stroke="#E8DAEF" stroke-width="2" opacity="0.5"/>
+  <path d="M 20 60 Q 25 55, 30 60 T 40 60 T 50 60" fill="none" stroke="#E8DAEF" stroke-width="2" opacity="0.5"/>
+  
+  <!-- Vinyl disc -->
+  <circle cx="30" cy="75" r="15" fill="#2C3E50" stroke="#1A252F" stroke-width="2"/>
+  <circle cx="30" cy="75" r="5" fill="#34495E"/>
+  <circle cx="30" cy="75" r="2" fill="#ECF0F1"/>
+  <path d="M 30 60 A 15 15 0 0 1 30 90" fill="none" stroke="#1A252F" stroke-width="1" opacity="0.3"/>
+</svg>
