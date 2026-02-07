@@ -226,23 +226,34 @@ input::placeholder {
 /* Varying card sizes using deterministic pattern based on nth-child */
 /* Pattern: Every 7th card is 2x2, every 5th (not 7th) is 2x1, every 11th is 1x2, rest are 1x1 */
 
-.button-container > a:nth-child(7n) .button {
+/* Apply grid spanning to the <a> elements (the actual grid items) */
+.button-container > a:nth-child(7n) {
     grid-column: span 2;
     grid-row: span 2;
+}
+
+.button-container > a:nth-child(5n):not(:nth-child(7n)) {
+    grid-column: span 2;
+    grid-row: span 1;
+}
+
+.button-container > a:nth-child(11n):not(:nth-child(7n)):not(:nth-child(5n)) {
+    grid-column: span 1;
+    grid-row: span 2;
+}
+
+/* Apply sizing to the .button elements (the content) */
+.button-container > a:nth-child(7n) .button {
     width: calc(200px * 2 + 8px);
     height: calc(200px * 2 + 8px);
 }
 
 .button-container > a:nth-child(5n):not(:nth-child(7n)) .button {
-    grid-column: span 2;
-    grid-row: span 1;
     width: calc(200px * 2 + 8px);
     height: 200px;
 }
 
 .button-container > a:nth-child(11n):not(:nth-child(7n)):not(:nth-child(5n)) .button {
-    grid-column: span 1;
-    grid-row: span 2;
     width: 200px;
     height: calc(200px * 2 + 8px);
 }
