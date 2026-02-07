@@ -228,14 +228,14 @@ input::placeholder {
 .button-container > a:nth-child(7n) .button {
     grid-column: span 2;
     grid-row: span 2;
-    width: 408px;
-    height: 408px;
+    width: calc(200px * 2 + 8px);
+    height: calc(200px * 2 + 8px);
 }
 
 .button-container > a:nth-child(5n):not(:nth-child(7n)) .button {
     grid-column: span 2;
     grid-row: span 1;
-    width: 408px;
+    width: calc(200px * 2 + 8px);
     height: 200px;
 }
 
@@ -243,7 +243,7 @@ input::placeholder {
     grid-column: span 1;
     grid-row: span 2;
     width: 200px;
-    height: 408px;
+    height: calc(200px * 2 + 8px);
 }
 
 .pinned-container {
