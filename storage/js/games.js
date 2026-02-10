@@ -535,6 +535,8 @@ function openGameModal(gameName, gameImage, gameUrl) {
     
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
+    // Ensure modal scrolls to top of its container
+    modal.scrollTop = 0;
 }
 
 // Function to close game modal

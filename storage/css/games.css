@@ -488,12 +488,15 @@ a, button, .button, select, input {
     background-color: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(5px);
     animation: fadeIn 0.3s ease;
+    overflow-y: auto;
+    padding: 20px;
 }
 
 .game-modal.active {
     display: flex;
     align-items: center;
     justify-content: center;
+    align-content: center;
 }
 
 .modal-content {
@@ -507,6 +510,7 @@ a, button, .button, select, input {
     overflow-y: auto;
     position: relative;
     animation: slideUp 0.3s ease;
+    margin: auto;
 }
 
 .modal-close {
