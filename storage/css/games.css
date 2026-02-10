@@ -141,7 +141,14 @@ h1 {
 .button h2 {
     font-size: 30px;
     text-align: center;
+    word-wrap: break-word;
+    padding: 5px;
+}
 
+/* Adjust font size for larger cards */
+.button-container > a:nth-child(7n) .button h2,
+.button-container > a:nth-child(5n):not(:nth-child(7n)) .button h2 {
+    font-size: 36px;
 }
 
 .pin-button {
@@ -205,9 +212,50 @@ input::placeholder {
 }
 
 .button-container {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 200px);
+    grid-auto-rows: 200px;
+    grid-auto-flow: dense;
+    gap: 8px;
     justify-content: center;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Varying card sizes using deterministic pattern based on nth-child */
+/* Pattern: Every 7th card is 2x2, every 5th (not 7th) is 2x1, every 11th is 1x2, rest are 1x1 */
+
+/* Apply grid spanning to the <a> elements (the actual grid items) */
+.button-container > a:nth-child(7n) {
+    grid-column: span 2;
+    grid-row: span 2;
+}
+
+.button-container > a:nth-child(5n):not(:nth-child(7n)) {
+    grid-column: span 2;
+    grid-row: span 1;
+}
+
+.button-container > a:nth-child(11n):not(:nth-child(7n)):not(:nth-child(5n)) {
+    grid-column: span 1;
+    grid-row: span 2;
+}
+
+/* Apply sizing to the .button elements (the content) */
+.button-container > a:nth-child(7n) .button {
+    width: calc(200px * 2 + 8px);
+    height: calc(200px * 2 + 8px);
+}
+
+.button-container > a:nth-child(5n):not(:nth-child(7n)) .button {
+    width: calc(200px * 2 + 8px);
+    height: 200px;
+}
+
+.button-container > a:nth-child(11n):not(:nth-child(7n)):not(:nth-child(5n)) .button {
+    width: 200px;
+    height: calc(200px * 2 + 8px);
 }
 
 .pinned-container {
@@ -374,24 +422,27 @@ p {
     z-index: 9999;
     user-select: none;
     cursor: default;
+    pointer-events: none;
     animation-name: snowfall;
     animation-duration: 10s;
     animation-timing-function: linear;
     animation-iteration-count: infinite;
-    opacity: 0.6;
+    opacity: 0.7;
     width: 6px;
     height: 6px;
-    background: linear-gradient(45deg, #ff00ff, #00ffff);
-    border: 1px solid #ffffff;
-    box-shadow: 0 0 3px #ff00ff, 0 0 6px #00ffff;
+    background: #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+    will-change: transform;
+    backface-visibility: hidden;
 }
 
 @keyframes snowfall {
     0% {
-        transform: translateY(0vh) translateX(0);
+        transform: translate3d(0, 0, 0);
     }
     100% {
-        transform: translateY(100vh) translateX(100px);
+        transform: translate3d(100px, 100vh, 0);
     }
 }
 
@@ -424,3 +475,4 @@ body {
 a, button, .button, select, input {
     cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="12" fill="none" stroke="white" stroke-width="2"/><circle cx="16" cy="16" r="6" fill="white"/></svg>') 16 16, pointer;
 }
+

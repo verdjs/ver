@@ -401,3 +401,189 @@ function saveGameToLocal(gameData) {
     games.push(gameData);
     localStorage.setItem('downloadedGames', JSON.stringify(games));
 }
+// Game descriptions database
+const gameDescriptions = {
+    // Popular Games
+    "OvO": "A fast-paced parkour platformer where you run, jump, slide, and dive through challenging levels. Master precision movement and timing to overcome obstacles.",
+    "OvO 2": "The sequel to the hit parkour game with new levels, mechanics, and challenges. Test your reflexes with even trickier obstacles and faster gameplay.",
+    "OvO 3 Dimensions": "Take parkour to new heights in this 3D evolution of the classic OvO series. Navigate through dimensional obstacles with enhanced movement mechanics.",
+    "Retro Bowl": "Lead your football team to glory in this retro-styled American football game. Manage your roster, call plays, and win championships.",
+    "Retro Bowl College": "Experience college football in retro style. Recruit players, manage your college team, and compete for the championship.",
+    "2048": "Combine numbered tiles to reach 2048. A simple yet addictive puzzle game that tests your strategy and planning skills.",
+    "Slope": "Race down an endless slope avoiding obstacles and staying on the track. Test your reflexes in this fast-paced 3D running game.",
+    "Slope 2": "The sequel with improved graphics and new challenging tracks. Navigate through treacherous slopes at breakneck speeds.",
+    "Run 3": "Navigate through space tunnels in this addictive endless runner. Jump between platforms and avoid falling into the void.",
+    "Jetpack Joyride": "Fly through a laboratory dodging obstacles with your jetpack. Collect coins and power-ups in this action-packed side-scroller.",
+    "Friday Night Funkin": "Rhythm game where you battle opponents in musical rap battles. Hit the right notes to win over your girlfriend's dad.",
+    "Temple Run 2": "Endless running game where you escape from temple guardians. Swipe to turn, jump, and slide through ancient ruins.",
+    "Stickman Hook": "Swing through levels using grappling hooks. Master the physics-based movement to reach the finish line.",
+    
+    // Vex Series
+    "Vex 1": "The original stickman platformer with deadly traps and challenging levels. Precision timing is key to survival.",
+    "Vex 2": "More levels, more traps, more challenge. Navigate through increasingly difficult obstacle courses.",
+    "Vex 3": "Third installment with new mechanics and harder levels. Can you survive all the deadly traps?",
+    "Vex 3 XMAS": "Holiday-themed version of Vex 3 with festive obstacles and winter wonderland levels.",
+    "Vex 4": "Continue the challenging platformer series with new zones and achievements to unlock.",
+    "Vex 5": "The fifth adventure featuring new levels, mechanics, and challenges for veteran players.",
+    "Vex 6": "Latest in the series with enhanced graphics and even more challenging obstacle courses.",
+    "Vex 7": "The newest Vex adventure with fresh levels and the toughest challenges yet.",
+    
+    // FNAF Series
+    "Five Nights at Freddy's": "Survive five nights as a security guard in a haunted pizza restaurant. Monitor cameras and conserve power to survive.",
+    "Five Nights at Freddy's 2": "Return to Freddy Fazbear's Pizza with new animatronics and gameplay mechanics. Survive the night shifts.",
+    "Five Nights at Freddy's 3": "Thirty years after the first restaurant closed, face the horrors in a horror attraction based on the legend.",
+    "Five Nights at Freddy's 4": "Face your childhood nightmares in this terrifying fourth installment. Defend against nightmare animatronics.",
+    
+    // Sports & Racing
+    "Basketball Frvr": "Simple yet addictive basketball shooting game. Swipe to shoot hoops and beat your high score.",
+    "Basket Battle": "Compete in fast-paced basketball matches. Score baskets and outplay your opponent.",
+    "Crossy Road": "Why did the chicken cross the road? Guide characters across busy streets, rivers, and train tracks.",
+    "Drift Boss": "Master the art of drifting around corners. Keep your car on the winding platform for as long as possible.",
+    "Drift Hunters": "Customize and drift high-performance cars. Earn points through skillful drifting and upgrades.",
+    
+    // Puzzle Games
+    "Color Water Sort 3D": "Sort colored water into tubes until each tube contains only one color. A relaxing puzzle challenge.",
+    "Block Blast": "Match and clear blocks in this addictive puzzle game. Plan your moves to achieve high scores.",
+    "Amaze": "Paint the entire maze by moving through it. Simple concept with increasingly complex puzzles.",
+    "Bottle Jump 3D": "Flip and jump the bottle from object to object. Master the physics to land perfectly every time.",
+    
+    // Action & Adventure
+    "Bowmasters": "Multiplayer archery battle game. Aim and shoot to defeat opponents with various characters and weapons.",
+    "Gladihoppers": "Physics-based gladiator fighting game. Battle in the arena using various weapons and tactics.",
+    "Ice Dodo": "Help the ice bird navigate through frozen landscapes. Avoid obstacles and collect items.",
+    "Attack Hole": "Control a black hole that grows by consuming objects. Strategy meets chaos in this unique game.",
+    "Bazooka Boy": "Shoot your way through levels using a bazooka. Destroy obstacles and enemies with explosive power.",
+    "Ragdoll Hit": "Shoot the ragdoll character through obstacles and targets. Physics-based shooting with satisfying results.",
+    
+    // Platformers & Runners
+    "Geometry Dash Lite (REMAKE)": "Rhythm-based platformer where you jump and fly through dangerous passages. Timing is everything.",
+    "Stacky Dash": "Collect blocks and use them to build bridges across gaps. Balance speed with resource management.",
+    "Tall Man Run": "Run through gates to grow taller or shorter. Navigate obstacles that require different heights.",
+    "Supreme Duelist": "Fast-paced stickman fighting game. Outmaneuver and defeat your opponent in intense duels.",
+    "Turbo Stars": "Race against opponents on wild tracks. Jump, duck, and dash your way to victory.",
+    
+    // Casual & Arcade
+    "Pou": "Virtual pet game where you feed, clean, and play with your alien pet. Keep Pou happy and healthy.",
+    "Sprunki": "Musical creativity game where you create beats and melodies. Mix different sounds and characters.",
+    "Magic Tiles 3": "Tap the black tiles to the rhythm of the music. Test your reflexes and musical timing.",
+    "Hide N Seek": "Classic hide and seek game with a twist. Either hide from seekers or find all the hiders.",
+    "Bridge Race": "Collect blocks and build bridges faster than opponents. Strategic gathering and building.",
+    "Color Match": "Match colors quickly in this fast-paced arcade game. Test your color recognition skills.",
+    "Dig Deep": "Dig underground to collect treasures and resources. Manage your tools and explore depths.",
+    "Monster Tracks": "Drive monster trucks over challenging terrain. Perform stunts and reach the finish line.",
+    "Gobble": "Eat everything in your path to grow larger. Classic snake gameplay with a modern twist.",
+    "Road of Fury": "Post-apocalyptic driving game with intense action. Shoot enemies and survive the wasteland.",
+    "Driven Wild": "Racing game with wild tracks and crazy vehicles. Speed through challenging courses.",
+    "Mob Control HTML5": "Control crowds and direct them to victory. Strategic crowd management and timing.",
+    
+    // Classic Games
+    "Hydrovolter": "Fast-paced action game with electric powers. Navigate levels and defeat enemies.",
+    "Wordle": "Daily word puzzle where you guess a five-letter word in six tries. Use logic and vocabulary skills.",
+    "Cookie Clicker": "Incremental game where you click to bake cookies. Unlock upgrades and automation.",
+    "Tetris": "Classic block-stacking puzzle game. Rotate and place falling pieces to clear lines.",
+    "Snake": "Guide the snake to eat food and grow longer. Avoid hitting walls or yourself.",
+    "Solitaire": "Classic card game. Stack cards in descending order and alternating colors.",
+    "Pac-Man": "Iconic maze game where you eat pellets while avoiding ghosts. Eat power pellets to turn the tables.",
+    "Space Invaders": "Classic arcade shooter. Defend Earth from descending alien invaders.",
+    
+    // Adventure Games
+    "Happy Wheels": "Physics-based ragdoll game with brutal levels. Choose characters and navigate deadly obstacle courses.",
+    "Learn to Fly": "Help the penguin achieve flight through various contraptions. Upgrade equipment to fly farther.",
+    "Learn to Fly 2": "Sequel with more upgrades, levels, and ways to help the penguin soar.",
+    "Learn to Fly 3": "Latest installment with the most features and challenging objectives yet.",
+    "Fancy Pants Adventure": "Stylish stick figure platformer with smooth animations. Run, jump, and slide through colorful worlds.",
+    "Fancy Pants Adventure 2": "Second adventure with new levels, enemies, and more fluid movement.",
+    "Fancy Pants Adventure 3": "Epic conclusion with the biggest adventure and most challenges.",
+    
+    // Fighting Games
+    "Super Smash Flash": "Fan-made fighting game featuring characters from various games. Battle in platform-fighter action.",
+    "Stick War": "Control an army of stick figures in strategic warfare. Build units and conquer territories.",
+    "Stick War 2": "Enhanced sequel with more units, upgrades, and strategic depth.",
+    
+    // Cooking Games
+    "Papa's Burgeria": "Manage a burger restaurant. Take orders, grill patties, and serve customers perfectly.",
+    "Papa's Pizzeria": "Run a pizza shop. Prepare, cook, and serve pizzas to demanding customers.",
+    "Papa's Freezeria": "Create delicious sundaes at an ice cream shop. Mix ingredients and satisfy sweet tooths.",
+    "Cooking Mama": "Cook various dishes following step-by-step instructions. Master culinary skills in mini-games.",
+    
+    // Multiplayer & IO Games
+    "Agar.io": "Grow your cell by eating smaller cells. Avoid larger ones in this multiplayer arena.",
+    "Slither.io": "Snake game in a multiplayer arena. Grow longer while avoiding other snakes.",
+    
+    // Default description for games not in database
+    "default": "An exciting game that will test your skills and provide hours of entertainment. Jump in and start playing!"
+};
+
+// Function to get game description
+function getGameDescription(gameName) {
+    return gameDescriptions[gameName] || gameDescriptions["default"];
+}
+
+// Function to open game modal
+function openGameModal(gameName, gameImage, gameUrl) {
+    const modal = document.getElementById('gameModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalDescription = document.getElementById('modalDescription');
+    const modalImage = document.getElementById('modalImage');
+    const modalLaunchBtn = document.getElementById('modalLaunchBtn');
+    
+    modalTitle.textContent = gameName;
+    modalDescription.textContent = getGameDescription(gameName);
+    modalImage.src = gameImage;
+    modalImage.alt = gameName;
+    modalLaunchBtn.href = gameUrl;
+    
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    // Ensure modal scrolls to top of its container
+    modal.scrollTop = 0;
+}
+
+// Function to close game modal
+function closeGameModal() {
+    const modal = document.getElementById('gameModal');
+    modal.classList.remove('active');
+    document.body.style.overflow = 'auto';
+}
+
+// Close modal when clicking outside
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('gameModal');
+    if (modal) {
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeGameModal();
+            }
+        });
+    }
+    
+    // Add click handlers to all game buttons
+    document.querySelectorAll('.button-container > a').forEach(function(gameLink) {
+        const button = gameLink.querySelector('.button');
+        if (button) {
+            button.addEventListener('click', function(e) {
+                // Only open modal if not clicking on pin or download buttons
+                if (!e.target.closest('.pin-button') && !e.target.closest('.download-button')) {
+                    e.preventDefault();
+                    
+                    const gameName = button.querySelector('h2').textContent;
+                    const gameUrl = gameLink.getAttribute('href');
+                    
+                    // Get background image from button style
+                    const style = button.getAttribute('style');
+                    const imageMatch = style.match(/url\(['"]?([^'"]+)['"]?\)/);
+                    const gameImage = imageMatch ? imageMatch[1] : '/images/ico.ico';
+                    
+                    openGameModal(gameName, gameImage, gameUrl);
+                }
+            });
+        }
+    });
+});
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeGameModal();
+    }
+});
