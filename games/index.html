@@ -7875,6 +7875,18 @@
         <p> // all games playable on this website are complete copyright & property of their respective owners \\</p>
 
         <br>
+
+        <!-- Game Modal -->
+        <div id="gameModal" class="game-modal">
+            <div class="modal-content">
+                <button class="modal-close" onclick="closeGameModal()">&times;</button>
+                <img id="modalImage" class="modal-image" src="" alt="">
+                <h2 id="modalTitle" class="modal-title"></h2>
+                <p id="modalDescription" class="modal-description"></p>
+                <a id="modalLaunchBtn" class="modal-launch-btn" href="" target="_blank">Launch Game</a>
+            </div>
+        </div>
+
         <script>
             // Map of GN Math games to local fallback paths
             const gnMathFallbacks = {

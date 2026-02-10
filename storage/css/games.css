@@ -422,24 +422,27 @@ p {
     z-index: 9999;
     user-select: none;
     cursor: default;
+    pointer-events: none;
     animation-name: snowfall;
     animation-duration: 10s;
     animation-timing-function: linear;
     animation-iteration-count: infinite;
-    opacity: 0.6;
+    opacity: 0.7;
     width: 6px;
     height: 6px;
-    background: linear-gradient(45deg, #ff00ff, #00ffff);
-    border: 1px solid #ffffff;
-    box-shadow: 0 0 3px #ff00ff, 0 0 6px #00ffff;
+    background: #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+    will-change: transform;
+    backface-visibility: hidden;
 }
 
 @keyframes snowfall {
     0% {
-        transform: translateY(0vh) translateX(0);
+        transform: translate3d(0, 0, 0);
     }
     100% {
-        transform: translateY(100vh) translateX(100px);
+        transform: translate3d(100px, 100vh, 0);
     }
 }
 
@@ -471,4 +474,121 @@ body {
 
 a, button, .button, select, input {
     cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="12" fill="none" stroke="white" stroke-width="2"/><circle cx="16" cy="16" r="6" fill="white"/></svg>') 16 16, pointer;
+}
+
+/* Game Modal */
+.game-modal {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+    animation: fadeIn 0.3s ease;
+}
+
+.game-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: var(--background-color);
+    border: 3px solid var(--border-color2);
+    border-radius: 16px;
+    padding: 30px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    animation: slideUp 0.3s ease;
+}
+
+.modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    color: var(--text-color);
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 5px 10px;
+    transition: transform 0.2s;
+}
+
+.modal-close:hover {
+    transform: scale(1.2);
+}
+
+.modal-image {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    border: 2px solid var(--border-color2);
+}
+
+.modal-title {
+    font-size: 32px;
+    margin-bottom: 15px;
+    color: var(--text-color);
+    text-align: center;
+}
+
+.modal-description {
+    color: var(--text-color);
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 25px;
+    text-align: left;
+}
+
+.modal-launch-btn {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    background-color: var(--hover-color);
+    color: var(--text-color);
+    border: 3px solid var(--border-color1);
+    border-radius: 12px;
+    font-size: 20px;
+    font-family: var(--font-family);
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+    text-align: center;
+}
+
+.modal-launch-btn:hover {
+    background-color: var(--border-color1);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
