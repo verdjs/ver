@@ -373,14 +373,10 @@ a {
     
 }
 
-/* GN Math Games - already dimmed via general .button::before, remove duplicate */
+/* GN Math Games - already dimmed via general .button::before */
 .button.gn-math-game {
     position: relative;
     background-color: transparent !important;
-}
-
-.button.gn-math-game::before {
-    /* Inherits dimming from .button::before */
 }
 
 .button.gn-math-game h2 {
