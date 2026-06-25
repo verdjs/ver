@@ -133,23 +133,6 @@ h1 {
     position: relative;
 }
 
-/* Dim all game card background images by 25% */
-.button::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: inherit;
-    background-size: inherit;
-    background-position: inherit;
-    background-repeat: inherit;
-    filter: brightness(0.75);
-    border-radius: 13px;
-    z-index: 0;
-}
-
 .button:hover {
     background-color: var(--background-color);
     border: 3.2px solid var(--border-color1);
@@ -160,8 +143,6 @@ h1 {
     text-align: center;
     word-wrap: break-word;
     padding: 5px;
-    position: relative;
-    z-index: 1;
 }
 
 /* Adjust font size for larger cards */
@@ -373,10 +354,26 @@ a {
     
 }
 
-/* GN Math Games - already dimmed via general .button::before */
+/* GN Math Games - dim background images only, keep text bright */
 .button.gn-math-game {
     position: relative;
     background-color: transparent !important;
+}
+
+.button.gn-math-game::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: inherit;
+    background-size: inherit;
+    background-position: inherit;
+    background-repeat: inherit;
+    filter: brightness(0.75);
+    border-radius: 13px;
+    z-index: 0;
 }
 
 .button.gn-math-game h2 {
