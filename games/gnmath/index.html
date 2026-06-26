@@ -59,12 +59,27 @@
                 "taboola.com", "outbrain.com", "contextual.media.net", "ads.yahoo.com",
                 "sp.analytics.yahoo.com", "quantserve.com", "scorecardresearch.com", "mc.yandex.ru"
             ];
+            // sketchy / unwanted TLDs — block ANY host ending in these
+            // (adult TLDs + well-known spam/abuse TLDs). game CDNs use .net/.io/.dev/.com/.fun so are safe.
+            var BAD_TLDS = [
+                ".gay", ".xxx", ".porn", ".adult", ".sex", ".sexy", ".nude", ".cam", ".escort",
+                ".cyou", ".icu", ".monster", ".cfd", ".sbs", ".bond", ".click", ".loan",
+                ".work", ".date", ".review", ".trade", ".party", ".stream", ".download",
+                ".racing", ".win", ".cricket", ".science", ".accountant", ".bid", ".men",
+                ".kim", ".rest", ".buzz"
+            ];
             function host(u) { try { return new URL(u, location.href).hostname.toLowerCase(); } catch (e) { return ""; } }
             function isAd(u) {
                 var h = host(u); if (!h) return false;
                 for (var i = 0; i < AD.length; i++) {
                     var d = AD[i];
                     if (h === d || h.substring(h.length - d.length - 1) === "." + d) return true;
+                }
+                // bad TLD suffix check (e.g. foo.gay, sketch.cyou)
+                if (h.indexOf(".") !== -1) {
+                    for (var j = 0; j < BAD_TLDS.length; j++) {
+                        if (h === BAD_TLDS[j].substring(1) || h.indexOf(BAD_TLDS[j], h.length - BAD_TLDS[j].length) !== -1) return true;
+                    }
                 }
                 return false;
             }
@@ -97,10 +112,16 @@
             // strip ad elements as they appear
             function strip(el) {
                 if (!el || el.nodeType !== 1) return;
+                // sidebar ad containers (gn-math) — block before they render
+                if (el.id === "sidebarad1" || el.id === "sidebarad2") { el.remove(); return; }
                 if (el.tagName === "SCRIPT" && el.src && isAd(el.src)) { el.remove(); return; }
                 if (el.tagName === "INS" && (el.className || "").indexOf("adsbygoogle") !== -1) { el.remove(); return; }
                 if (el.tagName === "IFRAME" && el.src && isAd(el.src)) { el.remove(); return; }
                 if (el.id === "googlefcPresent") { el.remove(); return; }
+                // also catch the sidebar ad's close button container if injected alone
+                if (el.classList && el.classList.contains("sidebar-close")) {
+                    var p = el.parentElement; if (p && (p.id === "sidebarad1" || p.id === "sidebarad2")) p.remove();
+                }
             }
             try {
                 var mo = new MutationObserver(function (muts) {
@@ -112,7 +133,7 @@
                 mo.observe(document.documentElement, { childList: true, subtree: true });
             } catch (e) {}
             try {
-                document.querySelectorAll("ins.adsbygoogle, #googlefcPresent").forEach(function (e) { e.remove(); });
+                document.querySelectorAll("ins.adsbygoogle, #googlefcPresent, #sidebarad1, #sidebarad2").forEach(function (e) { e.remove(); });
                 document.querySelectorAll("script[src]").forEach(function (s) { if (isAd(s.src)) s.remove(); });
                 document.querySelectorAll("iframe").forEach(function (fr) { if (isAd(fr.src)) fr.remove(); });
             } catch (e) {}
@@ -158,12 +179,27 @@
             "taboola.com", "outbrain.com", "contextual.media.net", "ads.yahoo.com",
             "sp.analytics.yahoo.com", "quantserve.com", "scorecardresearch.com", "mc.yandex.ru"
         ];
+        // sketchy / unwanted TLDs — block ANY host ending in these
+        // (kept in sync with the runtime blocker's BAD_TLDS list)
+        var BAD_TLDS = [
+            ".gay", ".xxx", ".porn", ".adult", ".sex", ".sexy", ".nude", ".cam", ".escort",
+            ".cyou", ".icu", ".monster", ".cfd", ".sbs", ".bond", ".click", ".loan",
+            ".work", ".date", ".review", ".trade", ".party", ".stream", ".download",
+            ".racing", ".win", ".cricket", ".science", ".accountant", ".bid", ".men",
+            ".kim", ".rest", ".buzz"
+        ];
         function isAdUrl(u) {
             var h;
             try { h = new URL(u, location.href).hostname.toLowerCase(); } catch (e) { return false; }
             for (var i = 0; i < AD_DOMAINS.length; i++) {
                 var d = AD_DOMAINS[i];
                 if (h === d || h.substring(h.length - d.length - 1) === "." + d) return true;
+            }
+            // bad TLD suffix check (e.g. foo.gay, sketch.cyou)
+            if (h.indexOf(".") !== -1) {
+                for (var j = 0; j < BAD_TLDS.length; j++) {
+                    if (h === BAD_TLDS[j].substring(1) || h.indexOf(BAD_TLDS[j], h.length - BAD_TLDS[j].length) !== -1) return true;
+                }
             }
             return false;
         }
@@ -221,7 +257,7 @@
                 if (/adsbygoogle|gtag\s*\(|signalGooglefcPresent|googlefcPresent|google_ad_|adsense|doubleclick|googletag\.cmd|fundingchoices/i.test(t)) s.remove();
             });
             // ad units + consent iframes + ad meta/links
-            doc.querySelectorAll("ins.adsbygoogle, #googlefcPresent, meta[name='google-adsense-account']").forEach(function (e) { e.remove(); });
+            doc.querySelectorAll("ins.adsbygoogle, #googlefcPresent, #sidebarad1, #sidebarad2, meta[name='google-adsense-account']").forEach(function (e) { e.remove(); });
             doc.querySelectorAll("iframe[src], link[href]").forEach(function (e) {
                 var u = e.getAttribute("src") || e.getAttribute("href");
                 if (u && isAdUrl(u)) e.remove();
