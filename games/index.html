@@ -56,6 +56,7 @@
         </script>
   </head>
   <body>
+    <canvas id="cursor-fx" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9998;"></canvas>
     
      <!-- Snow particles -->
      <div class="snowflake"></div>
@@ -92,6 +93,18 @@
             <option value="puzzle">puzzle</option>
             <option value="simulation">simulation</option>
         </select>
+        <div class="toggles" style="margin-top: 8px; display: flex; gap: 8px; align-items: center; justify-content: center; flex-wrap: wrap;">
+            <button id="themeToggle" onclick="toggleTheme()" style="background: var(--background-color); color: var(--text-color); border: 2px solid var(--border-color2); border-radius: 8px; padding: 6px 12px; cursor: pointer; font-family: var(--font-family); font-size: 14px;">🌙</button>
+            <select id="cloakSelect" onchange="applyCloak(this.value)" style="background: var(--background-color); color: var(--text-color); border: 2px solid var(--border-color2); border-radius: 8px; padding: 6px 8px; cursor: pointer; font-family: var(--font-family); font-size: 14px;">
+                <option value="">no cloak</option>
+                <option value="google">google</option>
+                <option value="classroom">classroom</option>
+                <option value="drive">drive</option>
+                <option value="docs">docs</option>
+                <option value="gmail">gmail</option>
+                <option value="canvas">canvas</option>
+            </select>
+        </div>
         
         <p class="linkp"><a href="../index.html">homepage</a> •  <a href="https://github.com/verdjs/verdis" target="_blank">github</a> •  <a id="openBlankLink">open blank</a></p>
         
@@ -103,6 +116,13 @@
 
         <h2 class="allgames-header"></h2>
         <div class="button-container" id="button-container">
+            <a target="_blank" href="hydrovolter/index.html">
+                <div class="button" style="background-image: url('/hydro.png');" data-genre="arcade">
+                    <h2>Hydrovolter</h2>
+                    <span class="pin-button"><img src="/images/other/star.png" width="25px" height="25px"></span>
+                </div>
+            </a>
+
             <a target="_blank" href="../solus/balatro.html">
                 <div class="button" style="background-image: url('../images/thumbnails/balatro.jpg');" data-genre="arcade">
                     <h2>Balatro</h2>
@@ -145,13 +165,6 @@
                 </div>
             </a>
 
-            <a target="_blank" href="../solus/gta.html">
-                <div class="button" style="background-image: url('../images/thumbnails/gta.png');" data-genre="adventure">
-                    <h2>GTA Vice City</h2>
-                    <span class="pin-button"><img src="/images/other/star.png" width="25px" height="25px"></span>
-                </div>
-            </a>
-
             <a target="_blank" href="../solus/celeste.html">
                 <div class="button" style="background-image: url('../images/thumbnails/celeste.jpg');" data-genre="platformer">
                     <h2>Celeste</h2>
@@ -159,12 +172,8 @@
                 </div>
             </a>
 
-            <a target="_blank" href="hydrovolter/index.html">
-                <div class="button" style="background-image: url('/hydro.png');" data-genre="arcade">
-                    <h2>Hydrovolter</h2>
-                    <span class="pin-button"><img src="/images/other/star.png" width="25px" height="25px"></span>
-                </div>
-            </a>
+            <!-- gn-math games (all 819) are inserted before this sentinel by the render script -->
+            <span id="gnmath-insert"></span>
 
             <a target="_blank" href="ovo/index.html">
                 <div class="button" style="background-image: url('../images/thumbnails/ovo.jpg');" data-genre="arcade">
@@ -3236,7 +3245,12 @@
                     frag.appendChild(makeTile(zones[i]));
                     count++;
                 }
-                grid.appendChild(frag);
+                var marker = document.getElementById('gnmath-insert');
+                if (marker && marker.parentNode === grid) {
+                    grid.insertBefore(frag, marker);
+                } else {
+                    grid.appendChild(frag);
+                }
                 if (window.bindPin) window.bindPin(grid);
                 if (window.updateCounter) window.updateCounter();
                 if (window.applyFilter) window.applyFilter();
@@ -3354,6 +3368,95 @@
         })();
         </script>
 
+        <script>
+            // ---- theme toggle ----
+            (function () {
+                function apply(t) {
+                    document.documentElement.setAttribute('data-theme', t);
+                    try { localStorage.setItem('theme', t); } catch (e) {}
+                    var btn = document.getElementById('themeToggle');
+                    if (btn) btn.textContent = t === 'dark' ? '☀️' : '🌙';
+                }
+                var saved = (function () { try { return localStorage.getItem('theme'); } catch (e) { return null; } })();
+                if (!saved) saved = 'dark';
+                apply(saved);
+                window.toggleTheme = function () {
+                    var cur = document.documentElement.getAttribute('data-theme') || 'dark';
+                    apply(cur === 'dark' ? 'light' : 'dark');
+                };
+            })();
+        </script>
+        <script>
+            // ---- tab cloak ----
+            (function () {
+                var CLOAKS = {
+                    '': { title: 'Games | Verdis', icon: '/images/ico.ico' },
+                    'google': { title: 'Google', icon: 'https://www.google.com/favicon.ico' },
+                    'classroom': { title: 'Classes', icon: 'https://ssl.gstatic.com/classroom/favicon.png' },
+                    'drive': { title: 'My Drive - Google Drive', icon: 'https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png' },
+                    'docs': { title: 'Untitled document - Google Docs', icon: 'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico' },
+                    'gmail': { title: 'Inbox (1) - Gmail', icon: 'https://ssl.gstatic.com/ui/v1/icons/mail/rfr/gmail.ico' },
+                    'canvas': { title: 'Dashboard', icon: 'https://du11hjcvx0uqb.cloudfront.net/dist/images/favicon-e10d657a73.ico' }
+                };
+                function apply(name) {
+                    var c = CLOAKS[name] || CLOAKS[''];
+                    document.title = c.title;
+                    var ico = document.querySelector("link[rel*='icon']") || document.createElement('link');
+                    ico.rel = 'icon'; ico.type = 'image/x-icon'; ico.href = c.icon;
+                    if (!ico.parentNode) document.head.appendChild(ico);
+                    try { localStorage.setItem('cloak', name || ''); } catch (e) {}
+                }
+                var saved = (function () { try { return localStorage.getItem('cloak') || ''; } catch (e) { return ''; } })();
+                if (saved) { apply(saved); var s = document.getElementById('cloakSelect'); if (s) s.value = saved; }
+                window.applyCloak = apply;
+            })();
+        </script>
+        <script>
+            // ---- cursor particle trail (evaporating sparks) ----
+            (function () {
+                var canvas = document.getElementById('cursor-fx');
+                if (!canvas) return;
+                var ctx = canvas.getContext('2d');
+                var particles = [];
+                function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+                resize(); window.addEventListener('resize', resize);
+                var mx = -100, my = -100, last = 0;
+                window.addEventListener('mousemove', function (e) {
+                    mx = e.clientX; my = e.clientY;
+                    var now = Date.now();
+                    if (now - last < 14) return;
+                    last = now;
+                    for (var i = 0; i < 2; i++) {
+                        particles.push({
+                            x: mx + (Math.random() - 0.5) * 6,
+                            y: my + (Math.random() - 0.5) * 6,
+                            vx: (Math.random() - 0.5) * 1.6,
+                            vy: (Math.random() - 0.5) * 1.6 - 0.4,
+                            life: 1,
+                            size: 3 + Math.random() * 3,
+                            hue: 160 + Math.random() * 70
+                        });
+                    }
+                });
+                function frame() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    for (var i = particles.length - 1; i >= 0; i--) {
+                        var p = particles[i];
+                        p.x += p.vx; p.y += p.vy;
+                        p.vx *= 0.95; p.vy *= 0.95;
+                        p.life -= 0.028;
+                        if (p.life <= 0) { particles.splice(i, 1); continue; }
+                        ctx.globalAlpha = p.life;
+                        ctx.fillStyle = 'hsl(' + p.hue + ', 85%, 62%)';
+                        var s = p.size * p.life;
+                        ctx.fillRect(p.x - s / 2, p.y - s / 2, s, s);
+                    }
+                    ctx.globalAlpha = 1;
+                    requestAnimationFrame(frame);
+                }
+                frame();
+            })();
+        </script>
         <script src="/storage/js/cloak.js"></script>
         <script src="/storage/js/theme.js"></script>
         <script src="/storage/js/cookie.js"></script>
