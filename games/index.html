@@ -14,13 +14,13 @@
         <link rel="shortcut icon" href="../images/ico.ico" type="image/x-icon">
         <link rel="stylesheet" href="/storage/css/games.css">
         <script src="/goodbye.js"></script>
-        <title>g@m3s | Verdis</title>
+        <title>Games | Verdis</title>
 
-        <meta name="description" content="an open source g@m3s site hosting 500+ g@m3s, useful utilities, powerful settings + a clean user interface">
+        <meta name="description" content="an open source games site hosting 500+ games, useful utilities, powerful settings + a clean user interface">
         <meta property="og:site_name" content="verdis">
         <meta property="og:title" content="verdis">
         <meta property="og:type" content="website">
-        <meta property="og:description" content="an open source g@m3s site hosting 500+ g@m3s, useful utilities, powerful settings + a clean user interface">
+        <meta property="og:description" content="an open source games site hosting 500+ games, useful utilities, powerful settings + a clean user interface">
         
         <style>
             .pinned-container {
@@ -80,7 +80,7 @@
      <div class="snowflake"></div>
     
         <h1 class="typewriter"><span id="cursor"></span></h1>
-        <p id="game-counter" style="font-size: 18px; margin-top: 10px; margin-bottom: 15px;">Loading g@m3s...</p>
+        <p id="game-counter" style="font-size: 18px; margin-top: 10px; margin-bottom: 15px;">Loading games...</p>
 
         <input type="text" id="search" placeholder="⌕ search" autocomplete="off">
         <select id="genreDropdown" style="margin-top: 5px; margin-left: 5px;">
@@ -96,7 +96,7 @@
         <p class="linkp"><a href="../index.html">homepage</a> •  <a href="https://github.com/verdjs/verdis" target="_blank">github</a> •  <a id="openBlankLink">open blank</a></p>
         
         <br>
-        <h2 class="pinned-header">starred g@m3s</h2>
+        <h2 class="pinned-header">starred games</h2>
         <div class="pinned-container">
 
         </div>
@@ -3078,8 +3078,7 @@
             </a>
 
 
-            <!-- gn-math games (all 819) are rendered here dynamically from the zones.json manifest -->
-            <div id="gnmath-grid"></div>
+            <!-- gn-math games (all 819) are rendered here dynamically from the zones.json manifest, appended directly into the grid above so they share the same bento layout as local games -->
 
             <br>
             <br>
@@ -3227,7 +3226,9 @@
             }
 
             function renderGnMath(zones) {
-                var grid = document.getElementById('gnmath-grid');
+                // append directly into #button-container so gn-math tiles participate
+                // in the same grid (and any bento nth-child sizing pattern) as local tiles
+                var grid = document.getElementById('button-container');
                 if (!grid) return;
                 var frag = document.createDocumentFragment();
                 var count = 0;
