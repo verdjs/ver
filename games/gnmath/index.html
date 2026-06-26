@@ -6,79 +6,134 @@
     <title>Google</title>
     <link rel="icon" href="https://www.google.com/favicon.ico" type="image/x-icon">
     <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            margin: 0;
-            padding: 0;
             background: #000;
             color: #fff;
             font-family: Arial, sans-serif;
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            min-height: 100vh;
         }
-        
-        #loading {
-            text-align: center;
-        }
-        
+        #loading { text-align: center; }
         .spinner {
             border: 4px solid #f3f3f3;
             border-top: 4px solid #3498db;
             border-radius: 50%;
-            width: 50px;
-            height: 50px;
+            width: 50px; height: 50px;
             animation: spin 1s linear infinite;
             margin: 0 auto 20px;
         }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
+        @keyframes spin { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
+        #status { font-size: 14px; opacity: 0.7; margin-top: 8px; }
         #error {
-            display: none;
-            text-align: center;
-            padding: 40px;
-            background: rgba(255, 0, 0, 0.1);
-            border: 2px solid #ff4444;
-            border-radius: 10px;
-            max-width: 600px;
+            display: none; text-align: center; padding: 40px;
+            background: rgba(255,0,0,0.1); border: 2px solid #ff4444;
+            border-radius: 10px; max-width: 600px;
         }
-        
-        #error h2 {
-            margin-top: 0;
-        }
-        
+        #error h2 { margin-top: 0; margin-bottom: 12px; }
+        #error p { line-height: 1.5; }
         #error button {
-            margin: 10px 5px;
-            padding: 10px 20px;
-            background: #3498db;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
+            margin: 10px 5px; padding: 10px 20px; background: #3498db;
+            color: #fff; border: none; border-radius: 5px; cursor: pointer; font-size: 16px;
         }
-        
-        #error button:hover {
-            background: #2980b9;
-        }
-        
-        #error-details {
-            font-size: 12px;
-            opacity: 0.7;
-            margin-top: 10px;
-        }
+        #error button:hover { background: #2980b9; }
+        #error-details { font-size: 12px; opacity: 0.7; margin-top: 10px; white-space: pre-wrap; word-break: break-all; }
     </style>
+
+    <!--
+        Built-in ad-blocker source.
+        type="text/plain" so the browser won't run it here.
+        It is read at runtime and injected as the FIRST <script> in the game
+        document, so it executes before any game/ad scripts run.
+    -->
+    <script type="text/plain" id="adblock-src">
+        (function () {
+            var AD = [
+                "pagead2.googlesyndication.com", "adservice.google.com", "googlesyndication.com",
+                "doubleclick.net", "googleads.g.doubleclick.net", "ads.doubleclick.net",
+                "www.googletagmanager.com", "www.google-analytics.com", "ssl.google-analytics.com",
+                "fundingchoicesmessages.google.com", "adsense.google.com", "ads.google.com",
+                "googletagservices.com", "adnxs.com", "amazon-adsystem.com", "criteo.com",
+                "taboola.com", "outbrain.com", "contextual.media.net", "ads.yahoo.com",
+                "sp.analytics.yahoo.com", "quantserve.com", "scorecardresearch.com", "mc.yandex.ru"
+            ];
+            function host(u) { try { return new URL(u, location.href).hostname.toLowerCase(); } catch (e) { return ""; } }
+            function isAd(u) {
+                var h = host(u); if (!h) return false;
+                for (var i = 0; i < AD.length; i++) {
+                    var d = AD[i];
+                    if (h === d || h.substring(h.length - d.length - 1) === "." + d) return true;
+                }
+                return false;
+            }
+            // neutralise ad/tracker globals
+            try { window.adsbygoogle = window.adsbygoogle || []; window.adsbygoogle.push = function () {}; } catch (e) {}
+            try { window.gtag = function () {}; window.dataLayer = window.dataLayer || []; window.dataLayer.push = function () {}; } catch (e) {}
+            try { window.googletag = window.googletag || {}; window.googletag.cmd = window.googletag.cmd || []; window.googletag.cmd.push = function () {}; } catch (e) {}
+            try { window.google_ad_client = null; window.google_ad_slot = null; } catch (e) {}
+            // network-level blocking
+            var f = window.fetch;
+            if (f) window.fetch = function (input, init) {
+                var u = typeof input === "string" ? input : (input && input.url);
+                if (u && isAd(u)) return Promise.reject(new Error("ad-blocked: " + u));
+                return f.apply(this, arguments);
+            };
+            var xo = XMLHttpRequest.prototype.open;
+            XMLHttpRequest.prototype.open = function (m, url) {
+                if (isAd(url)) throw new Error("ad-blocked: " + url);
+                return xo.apply(this, arguments);
+            };
+            var wo = window.open;
+            window.open = function (url) { if (url && isAd(String(url))) return null; return wo.apply(this, arguments); };
+            // stop anti-leave / "are you sure you want to leave?" traps
+            var ael = window.addEventListener;
+            window.addEventListener = function (type) {
+                if (type === "beforeunload" || type === "unload") return;
+                return ael.apply(this, arguments);
+            };
+            try { window.onbeforeunload = null; window.onunload = null; } catch (e) {}
+            // strip ad elements as they appear
+            function strip(el) {
+                if (!el || el.nodeType !== 1) return;
+                if (el.tagName === "SCRIPT" && el.src && isAd(el.src)) { el.remove(); return; }
+                if (el.tagName === "INS" && (el.className || "").indexOf("adsbygoogle") !== -1) { el.remove(); return; }
+                if (el.tagName === "IFRAME" && el.src && isAd(el.src)) { el.remove(); return; }
+                if (el.id === "googlefcPresent") { el.remove(); return; }
+            }
+            try {
+                var mo = new MutationObserver(function (muts) {
+                    for (var i = 0; i < muts.length; i++) {
+                        var a = muts[i].addedNodes;
+                        for (var j = 0; j < a.length; j++) strip(a[j]);
+                    }
+                });
+                mo.observe(document.documentElement, { childList: true, subtree: true });
+            } catch (e) {}
+            try {
+                document.querySelectorAll("ins.adsbygoogle, #googlefcPresent").forEach(function (e) { e.remove(); });
+                document.querySelectorAll("script[src]").forEach(function (s) { if (isAd(s.src)) s.remove(); });
+                document.querySelectorAll("iframe").forEach(function (fr) { if (isAd(fr.src)) fr.remove(); });
+            } catch (e) {}
+            // lock google cloaking so the game can't change it
+            try { Object.defineProperty(document, "title", { get: function () { return "Google"; }, set: function () {}, configurable: true }); } catch (e) {}
+            try {
+                var ico = document.querySelector("link[rel*='icon']") || document.createElement("link");
+                ico.rel = "icon"; ico.type = "image/x-icon"; ico.href = "https://www.google.com/favicon.ico";
+                if (!ico.parentNode) document.head.appendChild(ico);
+            } catch (e) {}
+            console.log("[gn-math ad-blocker] active");
+        })();
+    </script>
 </head>
 <body>
     <div id="loading">
         <div class="spinner"></div>
-        <div>Loading game from CDN...</div>
+        <div>Loading game...</div>
+        <div id="status">connecting to cdn</div>
     </div>
-    
+
     <div id="error">
         <h2>Failed to Load Game</h2>
         <p id="error-message"></p>
@@ -88,73 +143,182 @@
             <button onclick="window.location.href='../index.html'">Browse All Games</button>
         </div>
     </div>
-    
+
     <script>
-        // Get game parameter from URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const gameFile = urlParams.get('game');
-        
-        if (!gameFile) {
-            showError('No game specified in URL', 'Please use a valid game link from the games page.');
-        } else {
-            loadGame(gameFile);
-        }
-        
-        async function loadGame(gameFile) {
-            const htmlURL = "https://cdn.jsdelivr.net/gh/gn-math/html@main";
-            const url = `${htmlURL}/${gameFile}?t=${Date.now()}`;
-            
-            console.log('Loading game from:', url);
-            
-            // Set Google title and favicon for cloaking
-            document.title = "Google";
-            const favicon = document.querySelector('link[rel="icon"]');
-            if (favicon) {
-                favicon.href = "https://www.google.com/favicon.ico";
+        // capture the ad-blocker source BEFORE any document.write wipes the page
+        var AD_BLOCKER_SRC = document.getElementById('adblock-src').textContent;
+
+        // ---- ad domain list (used by the parent-side sanitizer too) ----
+        var AD_DOMAINS = [
+            "pagead2.googlesyndication.com", "adservice.google.com", "googlesyndication.com",
+            "doubleclick.net", "googleads.g.doubleclick.net", "ads.doubleclick.net",
+            "www.googletagmanager.com", "www.google-analytics.com", "ssl.google-analytics.com",
+            "fundingchoicesmessages.google.com", "adsense.google.com", "ads.google.com",
+            "googletagservices.com", "adnxs.com", "amazon-adsystem.com", "criteo.com",
+            "taboola.com", "outbrain.com", "contextual.media.net", "ads.yahoo.com",
+            "sp.analytics.yahoo.com", "quantserve.com", "scorecardresearch.com", "mc.yandex.ru"
+        ];
+        function isAdUrl(u) {
+            var h;
+            try { h = new URL(u, location.href).hostname.toLowerCase(); } catch (e) { return false; }
+            for (var i = 0; i < AD_DOMAINS.length; i++) {
+                var d = AD_DOMAINS[i];
+                if (h === d || h.substring(h.length - d.length - 1) === "." + d) return true;
             }
-            
+            return false;
+        }
+
+        // ---- new gn-math endpoints (freebuisness mirror) ----
+        var ZONES_URLS = [
+            "https://cdn.jsdelivr.net/gh/freebuisness/assets@main/zones.json",
+            "https://cdn.jsdelivr.net/gh/freebuisness/assets@latest/zones.json",
+            "https://cdn.jsdelivr.net/gh/freebuisness/assets/zones.json"
+        ];
+        var COVER_URL = "https://cdn.jsdelivr.net/gh/freebuisness/covers@main";
+        var HTML_URL  = "https://cdn.jsdelivr.net/gh/freebuisness/html@main";
+        var LEGACY_HTML_URL = "https://cdn.jsdelivr.net/gh/gn-math/html@main"; // last-resort fallback
+
+        function setStatus(t) { var s = document.getElementById('status'); if (s) s.textContent = t; }
+
+        // resolve a game id from the legacy ?game=N.html OR the new ?id=N param
+        function resolveId() {
+            var p = new URLSearchParams(window.location.search);
+            var raw = (p.get('id') || p.get('game') || '').trim();
+            if (!raw) return null;
+            return raw.replace(/\.html?$/i, '').trim();
+        }
+
+        async function fetchJsonWithFallback(urls) {
+            var lastErr;
+            for (var i = 0; i < urls.length; i++) {
+                try {
+                    var r = await fetch(urls[i] + "?t=" + Date.now());
+                    if (r.ok) return await r.json();
+                } catch (e) { lastErr = e; }
+            }
+            throw lastErr || new Error("all manifest sources failed");
+        }
+
+        // match the legacy filename (e.g. "2e", "8-wow", "20a") to a zone id
+        function findZone(zones, raw) {
+            var leadingNum = (raw.match(/^\d+/) || [""])[0];
+            var allDigits = raw.replace(/\D/g, "");
+            return zones.find(function (z) { return String(z.id) === raw; })
+                || zones.find(function (z) { return String(z.id) === leadingNum; })
+                || zones.find(function (z) { return String(z.id) === allDigits; });
+        }
+
+        // strip ads from the game html and prepend the runtime ad-blocker
+        function sanitizeGameHtml(html) {
+            var doc = new DOMParser().parseFromString(html, "text/html");
+            // external ad scripts
+            doc.querySelectorAll("script[src]").forEach(function (s) {
+                if (isAdUrl(s.getAttribute("src"))) s.remove();
+            });
+            // inline ad / tracker scripts
+            doc.querySelectorAll("script:not([src])").forEach(function (s) {
+                var t = s.textContent || "";
+                if (/adsbygoogle|gtag\s*\(|signalGooglefcPresent|googlefcPresent|google_ad_|adsense|doubleclick|googletag\.cmd|fundingchoices/i.test(t)) s.remove();
+            });
+            // ad units + consent iframes + ad meta/links
+            doc.querySelectorAll("ins.adsbygoogle, #googlefcPresent, meta[name='google-adsense-account']").forEach(function (e) { e.remove(); });
+            doc.querySelectorAll("iframe[src], link[href]").forEach(function (e) {
+                var u = e.getAttribute("src") || e.getAttribute("href");
+                if (u && isAdUrl(u)) e.remove();
+            });
+            // inject the runtime ad-blocker as the very first script so it runs before the game
+            var bs = doc.createElement("script");
+            bs.textContent = AD_BLOCKER_SRC;
+            if (doc.head) doc.head.insertBefore(bs, doc.head.firstChild);
+            return "<!DOCTYPE html>\n" + doc.documentElement.outerHTML;
+        }
+
+        function writeGame(html) {
+            var clean = sanitizeGameHtml(html);
+            document.open();
+            document.write(clean);
+            document.close();
+        }
+
+        async function fetchText(url) {
+            var r = await fetch(url + "?t=" + Date.now());
+            if (!r.ok) throw new Error("HTTP " + r.status + " for " + url);
+            return await r.text();
+        }
+
+        async function loadGame(raw) {
+            var zone = null, html = null, lastErr;
+
+            // 1) new way: fetch the zones.json manifest and look the game up by id
             try {
-                const response = await fetch(url);
-                
-                if (!response.ok) {
-                    if (response.status === 404) {
-                        throw new Error(`Game file not found: ${gameFile}`);
+                setStatus("fetching game manifest...");
+                var zones = await fetchJsonWithFallback(ZONES_URLS);
+                zone = findZone(zones, raw);
+                if (zone) {
+                    // external link (e.g. a featured/discord link) -> just redirect
+                    if (zone.url && /^https?:/i.test(zone.url) && zone.url.indexOf("{") === -1) {
+                        window.location.replace(zone.url);
+                        return;
                     }
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    var gameUrl = (zone.url || (HTML_URL + "/" + zone.id + ".html"))
+                        .replace("{COVER_URL}", COVER_URL)
+                        .replace("{HTML_URL}", HTML_URL);
+                    setStatus("loading " + (zone.name || "game") + "...");
+                    html = await fetchText(gameUrl);
                 }
-                
-                const html = await response.text();
-                
-                // Use the same pattern as singlefile.html - write HTML directly to document
-                document.open();
-                document.write(html);
-                document.close();
-                
-                // Re-apply Google cloaking after document.write (in case game changes it)
-                setTimeout(() => {
-                    if (document.title !== "Google") {
-                        document.title = "Google";
-                    }
-                }, 100);
-                
-            } catch (error) {
-                console.error('Error loading game:', error);
+            } catch (e) { lastErr = e; }
+
+            // 2) fallback: try fetching the html file directly using the leading numeric id
+            if (!html) {
+                var num = (raw.match(/^\d+/) || [""])[0];
+                var candidates = [];
+                if (num) candidates.push(HTML_URL + "/" + num + ".html");
+                candidates.push(HTML_URL + "/" + raw + ".html");
+                if (num) candidates.push(LEGACY_HTML_URL + "/" + num + ".html");
+                candidates.push(LEGACY_HTML_URL + "/" + raw + ".html");
+                for (var i = 0; i < candidates.length; i++) {
+                    try {
+                        setStatus("trying fallback source...");
+                        html = await fetchText(candidates[i]);
+                        break;
+                    } catch (e) { lastErr = e; }
+                }
+            }
+
+            if (!html) {
                 showError(
-                    error.message || 'Failed to load game',
-                    `Attempted URL: ${url}\n\nThis game may not be available on the CDN. Please try a different game.`
+                    (lastErr && lastErr.message) ? lastErr.message : "Game not available",
+                    'Couldn\'t load "' + raw + '" from any CDN source.\n\nTried the new gn-math manifest and direct fallbacks.'
                 );
+                return;
+            }
+
+            try {
+                writeGame(html);
+            } catch (e) {
+                showError("Failed to start game", (e && e.message) ? e.message : String(e));
             }
         }
-        
-        function showError(message, details = '') {
-            document.getElementById('loading').style.display = 'none';
-            const errorDiv = document.getElementById('error');
-            errorDiv.style.display = 'block';
-            document.getElementById('error-message').textContent = message;
-            if (details) {
-                document.getElementById('error-details').textContent = details;
-            }
+
+        function showError(message, details) {
+            var l = document.getElementById('loading'); if (l) l.style.display = 'none';
+            var e = document.getElementById('error'); e.style.display = 'block';
+            document.getElementById('error-message').textContent = message || "Unknown error";
+            if (details) document.getElementById('error-details').textContent = details;
         }
+
+        // ---- boot ----
+        (function () {
+            var raw = resolveId();
+            if (!raw) {
+                showError("No game specified in URL", "Please use a valid game link from the games page.");
+                return;
+            }
+            document.title = "Google"; // google cloaking on the loader page
+            loadGame(raw).catch(function (e) {
+                showError("Unexpected error", (e && e.message) ? e.message : String(e));
+            });
+        })();
     </script>
 </body>
 </html>
